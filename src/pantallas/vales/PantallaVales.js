@@ -1,8 +1,8 @@
 
 import React from "react";
-import { Link, Routes, Route } from "react-router-dom";
-import PantallaCarrito from "./PCarrito";
-import PantallaCatalogo from "./PCatalogo";
+import { Routes, Route } from "react-router-dom";
+import PantallaCarrito from "./PantallaCarrito";
+import PantallaCatalogo from "./PantallaCatalogo";
 
 export default function PantallaVales() {
 
