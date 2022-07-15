@@ -8,9 +8,6 @@ export const realizarCompra = createAsyncThunk('carrito/realizarCompra',
 		let materiales = redux.getState().carrito.materiales;
 		let empleado = redux.getState().api.usuario.datos;
 
-		console.log(empleado)
-		console.log((Math.random() * 10000).toFixed(0) + (Math.random() * 10000).toFixed(0))
-		console.log(materiales);
 		let pedido = {
 			codigoCliente: String(empleado.kunnr),
 			numeroPedidoOrigen: String((Math.random() * 10000).toFixed(0) + (Math.random() * 10000).toFixed(0)),
@@ -23,8 +20,6 @@ export const realizarCompra = createAsyncThunk('carrito/realizarCompra',
 				}
 			})
 		}
-
-		console.log('PEDIDO', pedido)
 
 		try {
 			let respuesta = await FEDICOM(redux).crearPedido(pedido);

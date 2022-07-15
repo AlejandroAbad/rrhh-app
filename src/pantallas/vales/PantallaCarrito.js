@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Box, Button, Chip, CircularProgress, Grid, IconButton, Paper, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Chip, CircularProgress, Grid, IconButton, Paper, TextField, Typography } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -66,6 +66,7 @@ const LineaArticulo = ({ codigo, nombre, descripcion, stock, precio, imagen, can
 					color="secondary"
 					size="small"
 					sx={{ width: '8ch' }}
+					InputLabelProps={{ shrink: true }}
 				/>
 				<IconButton onClick={fnEliminarCarrito}>
 					<DeleteIcon />

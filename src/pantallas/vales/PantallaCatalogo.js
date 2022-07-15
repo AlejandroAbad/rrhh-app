@@ -7,6 +7,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 
 // REDUX
 import { useDispatch, useSelector } from "react-redux";
@@ -31,7 +32,7 @@ const LineaArticulo = ({ codigo, nombre, stock, precio, imagen }) => {
 					<Typography variant="body1" component="div">{nombre}</Typography>
 					<Typography variant="body2" component="div">{precio} €</Typography>
 					<Box sx={{ display: 'flex', justifyContent: 'flex-end', pr: 3, mt: 3 }}>
-						<Typography variant="body2" component="div" sx={{color: 'text.disabled', fontSize: '80%'}}>
+						<Typography variant="body2" component="div" sx={{ color: 'text.disabled', fontSize: '80%' }}>
 							{stock} unidad{stock !== 1 && 'es'} en stock
 						</Typography>
 					</Box>
@@ -105,8 +106,8 @@ const DialogoDetalleArticulo = () => {
 	}
 	const fnControlOnBlur = (e) => {
 		if (!e.target.value?.trim().length) {
+			e.preventDefault();
 			e.target.value = 1;
-			e.preventDetault();
 		}
 	}
 
@@ -162,6 +163,7 @@ const DialogoDetalleArticulo = () => {
 										color="secondary"
 										size="small"
 										sx={{ width: '10ch', mr: 2, mt: 0.2 }}
+										InputLabelProps={{ shrink: true }}
 									/>
 
 
@@ -252,7 +254,10 @@ export default function PantallaCatalogo() {
 
 	let contenido = null;
 	if (estadoCatalogo === 'cargando') {
-		contenido = <CircularProgress />
+		contenido = <Box sx={{ mt: 18, display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
+			<div><CircularProgress /></div>
+			<Typography sx={{ ml: 2, mt: 0.5 }} variant="h6" component="div">Consultando catálogo</Typography>
+		</Box>
 	} else if (error) {
 		contenido = JSON.stringify(error)
 	} else if (materiales?.length > 0) {
@@ -262,7 +267,10 @@ export default function PantallaCatalogo() {
 			})}
 		</Grid>
 	} else {
-		contenido = 'Sin resultados';
+		contenido = <Box sx={{ mt: 18, display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
+			<div><SentimentVeryDissatisfiedIcon sx={{ width: '100px', height: '100px', color: 'text.disabled' }} /></div>
+			<Typography sx={{ ml: 2, mt: 2.9, color: 'text.disabled' }} variant="h3" component="div">Sin resultados</Typography>
+		</Box>
 	}
 
 
