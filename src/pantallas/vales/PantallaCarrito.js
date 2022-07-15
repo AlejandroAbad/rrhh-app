@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Chip, CircularProgress, Grid, IconButton, Paper, TextField, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Button, Chip, CircularProgress, Grid, IconButton, Paper, TextField, Typography } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -7,7 +7,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { realizarCompra, reiniciarEstadoCarrito, setMaterialEnCarrito } from "redux/api/carritoSlice";
+import { limpiarEstadoCreacionPedido, realizarCompra, reiniciarEstadoCarrito, setMaterialEnCarrito } from "redux/api/carritoSlice";
 
 
 const LineaArticulo = ({ codigo, nombre, descripcion, stock, precio, imagen, cantidad }) => {
@@ -176,14 +176,18 @@ export default function PantallaCarrito() {
 				</Button>
 
 				{estadoCreacionPedido === 'cargando' &&
-					<Box sx={{ mt: 2, display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
+					<Box sx={{ mt: 4, display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
 						<div><CircularProgress /></div>
 						<Typography sx={{ ml: 2, mt: 0.5 }} variant="h6" component="div">Creando pedido</Typography>
 					</Box>
 				}
 
 				{errorCreacionPedido &&
-					<Alert color="error">{errorCreacionPedido.toString()}</Alert>
+					<Alert severity="error" sx={{ mt: 4 }} onClose={() => dispatch(limpiarEstadoCreacionPedido())}>
+						<strong>Se ha producido un error:</strong>
+
+						{errorCreacionPedido.map((error, i) => <div key={i}>• {error.descripcion} <small>[{error.codigo}]</small></div>)}
+					</Alert>
 				}
 			</Grid>
 
