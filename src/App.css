@@ -1,6 +1,5 @@
 .App {
-	margin: none;
-	margin-top: 10px;
+	margin: 10px 0 0 10px;
 	/*border: 1px solid red;*/
 	width: 1195px;
 	min-height: 671px;

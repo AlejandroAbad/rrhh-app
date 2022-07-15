@@ -22,6 +22,8 @@ export const apiSlice = createSlice({
 	name: 'api',
 	initialState: {
 		urlBase: 'https://t01-ws.hefame.es',
+		urlFedicom: 'https://fedicom3-dev.hefame.es',
+		jwtFedicom: "123",
 		usuario: {
 			estado: 'inicial',
 			datos: { jwt: null, kunnr: null, pernr: null, werks: null, },

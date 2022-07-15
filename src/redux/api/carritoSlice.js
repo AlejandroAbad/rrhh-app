@@ -1,11 +1,50 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import FEDICOM from 'api/fedicom';
 
+
+export const realizarCompra = createAsyncThunk('carrito/realizarCompra',
+	async (_, redux) => {
+
+		console.log('AMOS A HACER LA COMPRA PIJO')
+		let materiales = redux.getState().carrito.materiales;
+		let empleado = redux.getState().api.usuario.datos;
+
+		console.log(empleado)
+		console.log((Math.random() * 10000).toFixed(0) + (Math.random() * 10000).toFixed(0))
+		console.log(materiales);
+		let pedido = {
+			codigoCliente: empleado.kunnr,
+			numeroPedidoOrigen: '' + (Math.random() * 10000).toFixed(0) + (Math.random() * 10000).toFixed(0),
+			codigoAlmacenServicio: empleado.werks,
+			lineas: materiales.map( (mat, i) => {
+				return {
+					orden: i,
+					codigoArticulo: mat.codigo,
+					cantidad: mat.cantidad
+				}
+			})
+		}
+
+		console.log('PEDIDO', pedido)
+
+		try {
+			let respuesta = await FEDICOM(redux).crearPedido(pedido);
+			return redux.fulfillWithValue(respuesta);
+		} catch (error) {
+			let mensaje = FEDICOM.generarErrorFetch(error);
+			return redux.rejectWithValue(mensaje);
+		}
+	}
+);
 
 
 export const carritoSlice = createSlice({
 	name: 'carrito',
 	initialState: {
-		materiales: []
+		materiales: [],
+		estado: 'inicial',
+		resultado: null,
+		error: null
 	},
 	reducers: {
 		setMaterialEnCarrito: (state, action) => {
@@ -28,7 +67,25 @@ export const carritoSlice = createSlice({
 				}
 			}
 		},
-	}
+	},
+	extraReducers: (builder) => {
+		builder
+			.addCase(realizarCompra.pending, (state) => {
+				state.resultado = null;
+				state.estado = 'cargando';
+				state.error = null;
+			})
+			.addCase(realizarCompra.fulfilled, (state, action) => {
+				state.resultado = action.payload;
+				state.estado = 'completado';
+				state.error = null;
+			})
+			.addCase(realizarCompra.rejected, (state, action) => {
+				state.resultado = null;
+				state.estado = 'error';
+				state.error = action.payload;
+			});
+	},
 });
 
 

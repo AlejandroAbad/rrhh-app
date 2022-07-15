@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import SAP from 'api/sap';
 
-export const actualizarCatalogo = createAsyncThunk('api/actualizarCatalogo',
+export const actualizarCatalogo = createAsyncThunk('catalogo/actualizarCatalogo',
 	async (_, redux) => {
 
 		let consulta = redux.getState().catalogo;
@@ -27,8 +27,7 @@ export const apiSlice = createSlice({
 		limite: 50,
 		materiales: [],
 		error: null,
-		materialSeleccionado: null,
-		pendienteCarrito: null
+		materialSeleccionado: null
 	},
 	reducers: {
 		setLimite: (state, action) => {
@@ -44,10 +43,6 @@ export const apiSlice = createSlice({
 		setMaterialSeleccionado: (state, action) => {
 			let codigoSeleccionado = action.payload;
 			state.materialSeleccionado = state.materiales.find(material => material.codigo === codigoSeleccionado)
-		},
-		setPendienteCarrito: (state, action) => {
-			let codigoSeleccionado = action.payload;
-			state.pendienteCarrito = state.materiales.find(material => material.codigo === codigoSeleccionado)
 		}
 	},
 	extraReducers: (builder) => {
@@ -71,5 +66,5 @@ export const apiSlice = createSlice({
 
 
 
-export const { setLimite, setPagina, setPatronBusqueda, setMaterialSeleccionado, setPendienteCarrito } = apiSlice.actions;
+export const { setLimite, setPagina, setPatronBusqueda, setMaterialSeleccionado } = apiSlice.actions;
 export default apiSlice.reducer;
