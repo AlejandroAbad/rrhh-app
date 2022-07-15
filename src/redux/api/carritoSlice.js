@@ -5,7 +5,6 @@ import FEDICOM from 'api/fedicom';
 export const realizarCompra = createAsyncThunk('carrito/realizarCompra',
 	async (_, redux) => {
 
-		console.log('AMOS A HACER LA COMPRA PIJO')
 		let materiales = redux.getState().carrito.materiales;
 		let empleado = redux.getState().api.usuario.datos;
 
@@ -13,10 +12,10 @@ export const realizarCompra = createAsyncThunk('carrito/realizarCompra',
 		console.log((Math.random() * 10000).toFixed(0) + (Math.random() * 10000).toFixed(0))
 		console.log(materiales);
 		let pedido = {
-			codigoCliente: empleado.kunnr,
-			numeroPedidoOrigen: '' + (Math.random() * 10000).toFixed(0) + (Math.random() * 10000).toFixed(0),
+			codigoCliente: String(empleado.kunnr),
+			numeroPedidoOrigen: String((Math.random() * 10000).toFixed(0) + (Math.random() * 10000).toFixed(0)),
 			codigoAlmacenServicio: empleado.werks,
-			lineas: materiales.map( (mat, i) => {
+			lineas: materiales.map((mat, i) => {
 				return {
 					orden: i,
 					codigoArticulo: mat.codigo,
@@ -67,6 +66,20 @@ export const carritoSlice = createSlice({
 				}
 			}
 		},
+		limpiarCarrito: (state, _) => {
+			state.materiales = [];
+		},
+		limpiarEstadoCreacionPedido: (state, _) => {
+			state.estado = 'inicial';
+			state.resultado = null;
+			state.error = null;
+		},
+		reiniciarEstadoCarrito: (state, _) => {
+			state.materiales = [];
+			state.estado = 'inicial';
+			state.resultado = null;
+			state.error = null;
+		}
 	},
 	extraReducers: (builder) => {
 		builder
@@ -90,5 +103,5 @@ export const carritoSlice = createSlice({
 
 
 
-export const { setMaterialEnCarrito, addMaterialEnCarrito } = carritoSlice.actions;
+export const { setMaterialEnCarrito, addMaterialEnCarrito, limpiarCarrito, limpiarEstadoCreacionPedido, reiniciarEstadoCarrito } = carritoSlice.actions;
 export default carritoSlice.reducer;

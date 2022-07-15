@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router";
 
-import { Alert, Badge, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, FormControl, Grid, IconButton, Input, InputAdornment, InputLabel, Link, Paper, TextField, Typography } from "@mui/material";
+import { Alert, Badge, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, FormControl, Grid, IconButton, Input, InputAdornment, InputLabel, Link, Paper, TextField, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import InfoIcon from '@mui/icons-material/Info';
-import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 
 // REDUX
 import { useDispatch, useSelector } from "react-redux";
@@ -15,7 +15,7 @@ import { addMaterialEnCarrito, setMaterialEnCarrito } from "redux/api/carritoSli
 
 
 
-const LineaArticulo = ({ codigo, nombre,/* descripcion, stock, */precio, imagen }) => {
+const LineaArticulo = ({ codigo, nombre, stock, precio, imagen }) => {
 
 	const dispatch = useDispatch();
 	const fnSeleccionarMaterial = React.useCallback(() => { dispatch(setMaterialSeleccionado(codigo)) }, [dispatch, codigo]);
@@ -30,10 +30,10 @@ const LineaArticulo = ({ codigo, nombre,/* descripcion, stock, */precio, imagen 
 					<Typography variant="caption" component="div">{codigo}</Typography>
 					<Typography variant="body1" component="div">{nombre}</Typography>
 					<Typography variant="body2" component="div">{precio} €</Typography>
-					<Box sx={{ display: 'flex', justifyContent: 'flex-end', pr: 3 }}>
-						<IconButton >
-							<InfoIcon />
-						</IconButton>
+					<Box sx={{ display: 'flex', justifyContent: 'flex-end', pr: 3, mt: 3 }}>
+						<Typography variant="body2" component="div" sx={{color: 'text.disabled', fontSize: '80%'}}>
+							{stock} unidad{stock !== 1 && 'es'} en stock
+						</Typography>
 					</Box>
 				</Grid>
 			</Grid>
@@ -46,7 +46,6 @@ const DialogoDetalleArticulo = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-
 	const [mostrarOk, setMostrarOk] = React.useState(0);
 	const refTimeout = React.useRef(null);
 	const refCantidad = React.useRef(1);
@@ -58,9 +57,15 @@ const DialogoDetalleArticulo = () => {
 		if (refTimeout.current) clearTimeout(refTimeout.current);
 		refTimeout.current = null;
 	}, [materialSeleccionado])
-	
-	let fnVerCarrito = React.useCallback(() => navigate('carrito', { replace: true }), [navigate]);
-	const fnDeseleccionarMaterial = React.useCallback(() => dispatch(setMaterialSeleccionado(null)), [dispatch])
+
+
+	const fnDeseleccionarMaterial = React.useCallback(() => {
+		dispatch(setMaterialSeleccionado(null))
+	}, [dispatch])
+	const fnVerCarrito = React.useCallback(() => {
+		navigate('carrito', { replace: true });
+		fnDeseleccionarMaterial();
+	}, [navigate, fnDeseleccionarMaterial]);
 	const fnAnadirCarrito = React.useCallback(() => {
 		dispatch(addMaterialEnCarrito({ cantidad: Math.max(+refCantidad.current.value, 1), ...materialSeleccionado }))
 		setMostrarOk(Math.max(+refCantidad.current.value, 1));
@@ -81,7 +86,7 @@ const DialogoDetalleArticulo = () => {
 	}, [dispatch, materialSeleccionado, setMostrarOk])
 
 	const contenidoCarrito = useSelector(state => state.carrito.materiales);
-	const cantidadActual = React.useMemo(() => {
+	const memoCantidadActual = React.useMemo(() => {
 		if (!materialSeleccionado?.codigo) return 0;
 		let material = contenidoCarrito.find(m => m.codigo === materialSeleccionado.codigo);
 		if (material) return material.cantidad;
@@ -94,6 +99,8 @@ const DialogoDetalleArticulo = () => {
 			if (!valor && valor !== '') e.target.value = 1;
 			else if (valor < 0) e.target.value = e.target.value * -1;
 			else e.target.value = valor;
+
+			if (valor > materialSeleccionado.stock) e.target.value = materialSeleccionado.stock;
 		}
 	}
 	const fnControlOnBlur = (e) => {
@@ -111,96 +118,109 @@ const DialogoDetalleArticulo = () => {
 	return <Dialog fullWidth maxWidth="lg" open={Boolean(materialSeleccionado)} onClose={fnDeseleccionarMaterial}			>
 
 		<DialogContent>
-			<DialogContentText >
-				<Grid container>
-					<Grid item xs={6} sx={{ display: 'flex', justifyContent: 'center' }}>
-						<img alt="" src={materialSeleccionado?.imagen} style={{ maxWidth: '400px', maxHeight: '400px' }} />
-					</Grid>
-					<Grid item xs={6} sx={{ pr: 4 }}>
-						<Typography variant="h6" sx={{ color: 'text.primary', fontWeight: 'bold' }}>
-							{materialSeleccionado?.nombre}
-						</Typography>
-
-						<Typography variant="caption" component="div" sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-							Código material: {materialSeleccionado?.codigo}
-						</Typography>
-
-						<Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-							<Typography sx={{}}>
-								Precio:
-							</Typography>
-							<Typography sx={{ color: 'text.primary', fontWeight: 'bold', ml: 1 }}>
-								{materialSeleccionado?.precio}
-							</Typography>
-							<Typography sx={{ fontWeight: 'bold' }}>
-								€
-							</Typography>
-						</Box>
-						<Typography variant="caption" component="div" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-							{materialSeleccionado?.stock} unidad{materialSeleccionado?.stock !== 1 && 'es'} disponible{materialSeleccionado?.stock !== 1 && 's'} en {almacenSuministro}
-						</Typography>
-
-						<Box sx={{ mt: 1, display: 'flex', justifyContent: 'flex-end' }}>
-							<TextField
-								inputRef={refCantidad}
-								defaultValue={1}
-								onChange={fnControlInputPositivo}
-								onBlur={fnControlOnBlur}
-								autoFocus
-								label="Cantidad"
-								type="number"
-								variant="outlined"
-								color="secondary"
-								size="small"
-								sx={{ width: '10ch', mr: 2, mt: 0.2 }}
-							/>
-
-							<Button
-								variant="contained"
-								onClick={fnAnadirCarrito}
-								startIcon={<AddShoppingCartIcon />}
-								sx={{ pt: 1 }}
-							>
-								Añadir al carrito
-							</Button>
-						</Box>
-
-						{cantidadActual > 0 &&
-							<>
-								<Typography variant="caption" component="div" sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-									Actualmente tienes {cantidadActual} unidad{cantidadActual !== 1 && 'es'} en el carrito.
-									<Link variant="caption" color="secondary" onClick={fnEliminarCarrito} sx={{ cursor: 'pointer' }}>Eliminarla{cantidadActual !== 1 && 's'}</Link>
-								</Typography>
-
-								<Box sx={{ mt: 1, display: 'flex', justifyContent: 'flex-end' }}>
-									<Button
-										variant="outlined"
-										size="small"
-										color="secondary"
-										onClick={fnVerCarrito}
-										startIcon={<ShoppingCartCheckoutIcon />}
-										sx={{ pl: 1.4 }}
-									>
-										Ir al carrito
-									</Button>
-								</Box>
-							</>
-						}
-
-						{mostrarOk > 0 &&
-							<Alert color="success" sx={{ mt: 2 }}>
-								Añadida{mostrarOk !== 1 && 's'} {mostrarOk} unidad{mostrarOk !== 1 && 'es'} al carrito.
-							</Alert>
-						}
-						{mostrarOk < 0 &&
-							<Alert color="info" sx={{ mt: 2 }}>
-								Se ha eliminado el producto del carrito
-							</Alert>
-						}
-					</Grid>
-
+			<Grid container>
+				<Grid item xs={6} sx={{ display: 'flex', justifyContent: 'center' }}>
+					<img alt="" src={materialSeleccionado?.imagen} style={{ maxWidth: '400px', maxHeight: '400px' }} />
 				</Grid>
-			</DialogContentText>
+				<Grid item xs={6} sx={{ pr: 4 }}>
+					<Typography variant="h6" sx={{ color: 'text.primary', fontWeight: 'bold' }}>
+						{materialSeleccionado?.nombre}
+					</Typography>
+
+					<Typography variant="caption" component="div" sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+						Código material: {materialSeleccionado?.codigo}
+					</Typography>
+
+					<Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+						<Typography sx={{}}>
+							Precio:
+						</Typography>
+						<Typography sx={{ color: 'text.primary', fontWeight: 'bold', ml: 1 }}>
+							{materialSeleccionado?.precio}
+						</Typography>
+						<Typography sx={{ fontWeight: 'bold' }}>
+							€
+						</Typography>
+					</Box>
+					<Typography variant="caption" component="div" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+						{materialSeleccionado?.stock} unidad{materialSeleccionado?.stock !== 1 && 'es'} disponible{materialSeleccionado?.stock !== 1 && 's'} en {almacenSuministro}
+					</Typography>
+
+					<Box sx={{ mt: 1, display: 'flex', justifyContent: 'flex-end' }}>
+						{
+							materialSeleccionado?.stock > 0 ?
+								<>
+									<TextField
+										inputRef={refCantidad}
+										defaultValue={1}
+										onChange={fnControlInputPositivo}
+										onBlur={fnControlOnBlur}
+										autoFocus
+										label="Cantidad"
+										type="number"
+										variant="outlined"
+										color="secondary"
+										size="small"
+										sx={{ width: '10ch', mr: 2, mt: 0.2 }}
+									/>
+
+
+									<Button
+										variant="contained"
+										onClick={fnAnadirCarrito}
+										startIcon={<AddShoppingCartIcon />}
+										sx={{ pt: 1 }}
+									>
+										Añadir al carrito
+									</Button>
+								</>
+								:
+								<Button
+									variant="outlined"
+									startIcon={<RemoveShoppingCartIcon />}
+									disabled
+									sx={{ pt: 1 }}
+								>
+									No hay stock en tu almacén
+								</Button>
+						}
+					</Box>
+
+					{memoCantidadActual > 0 &&
+						<>
+							<Typography variant="caption" component="div" sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+								Actualmente tienes {memoCantidadActual} unidad{memoCantidadActual !== 1 && 'es'} en el carrito.
+								<Link variant="caption" color="secondary" onClick={fnEliminarCarrito} sx={{ cursor: 'pointer' }}>Eliminarla{memoCantidadActual !== 1 && 's'}</Link>
+							</Typography>
+
+							<Box sx={{ mt: 1, display: 'flex', justifyContent: 'flex-end' }}>
+								<Button
+									variant="outlined"
+									size="small"
+									color="secondary"
+									onClick={fnVerCarrito}
+									startIcon={<ArrowForwardIcon />}
+									sx={{ pl: 1.4 }}
+								>
+									Ir al carrito
+								</Button>
+							</Box>
+						</>
+					}
+
+					{mostrarOk > 0 &&
+						<Alert color="success" sx={{ mt: 2 }}>
+							Añadida{mostrarOk !== 1 && 's'} {mostrarOk} unidad{mostrarOk !== 1 && 'es'} al carrito.
+						</Alert>
+					}
+					{mostrarOk < 0 &&
+						<Alert color="info" sx={{ mt: 2 }}>
+							Se ha eliminado el producto del carrito
+						</Alert>
+					}
+				</Grid>
+
+			</Grid>
 
 			<Box sx={{ mt: 1, px: 4, fontSize: '90%', color: 'text.secondary', textAlign: 'justify' }}>
 				<div dangerouslySetInnerHTML={{ __html: descripcion }} />

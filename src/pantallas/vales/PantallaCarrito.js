@@ -1,11 +1,13 @@
-import { Box, Button, Grid, IconButton, Paper, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Chip, CircularProgress, Grid, IconButton, Paper, TextField, Typography } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { realizarCompra, setMaterialEnCarrito } from "redux/api/carritoSlice";
+import { realizarCompra, reiniciarEstadoCarrito, setMaterialEnCarrito } from "redux/api/carritoSlice";
 
 
 const LineaArticulo = ({ codigo, nombre, descripcion, stock, precio, imagen, cantidad }) => {
@@ -17,6 +19,8 @@ const LineaArticulo = ({ codigo, nombre, descripcion, stock, precio, imagen, can
 		if (!valor && valor !== '') e.target.value = 1;
 		else if (valor < 0) e.target.value = e.target.value * -1;
 		else e.target.value = valor;
+
+		if (valor > stock) e.target.value = stock;
 		dispatch(setMaterialEnCarrito({ codigo, nombre, descripcion, stock, precio, imagen, cantidad: parseInt(e.target.value) }))
 	}, [dispatch, codigo, nombre, descripcion, stock, precio, imagen])
 	const fnEliminarCarrito = React.useCallback(() => {
@@ -37,11 +41,20 @@ const LineaArticulo = ({ codigo, nombre, descripcion, stock, precio, imagen, can
 			</Grid>
 			<Grid item xs={8}>
 				<Typography variant="caption" component="div">{codigo}</Typography>
-				<Typography variant="body1" component="div">{nombre}</Typography>
-				<Typography variant="body2" component="div">{(cantidad * precio).toFixed(2)}€ ({precio}€/ud)</Typography>
-				<Typography variant="body2" component="div">{cantidad} unidades</Typography>
+				<Typography variant="body1" component="div" sx={{ fontWeight: 'bold' }}>{nombre}</Typography>
+				<Box sx={{ display: 'flex', justifyContent: 'flex-start', alignContent: 'flex-end' }}>
+					<Typography variant="body2" sx={{ alignSelf: 'flex-end', fontSize: '110%' }}>{(cantidad * precio).toFixed(2)}€</Typography>
+					{cantidad > 1 &&
+						<Typography variant="body2" sx={{ color: 'text.disabled', alignSelf: 'flex-end', fontSize: '90%', ml: 2 }}>
+							{cantidad} unidad{cantidad !== 1 && 'es'} a {precio}€/ud`
+						</Typography>
+					}
+				</Box>
+
+				<Typography variant="body2" component="div" sx={{ clear: 'both', float: 'right', color: 'text.disabled', fontSize: '80%', mr: 2, mt: 2 }}>{stock} unidad{stock !== 1 && 'es'} en stock</Typography>
+
 			</Grid>
-			<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
+			<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', pb: 4 }}>
 				<TextField
 					inputRef={refCantidad}
 					defaultValue={cantidad}
@@ -58,6 +71,8 @@ const LineaArticulo = ({ codigo, nombre, descripcion, stock, precio, imagen, can
 					<DeleteIcon />
 				</IconButton>
 
+
+
 			</Grid>
 		</Grid>
 	</Paper>
@@ -67,11 +82,16 @@ export default function PantallaCarrito() {
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	let fnIrCatalogo = React.useCallback(() => {
+	let fnIrCatalogo = React.useCallback((opciones = {}) => {
+		let { limpiarCarrito } = opciones;
+		if (limpiarCarrito) dispatch(reiniciarEstadoCarrito())
 		navigate('catalogo', { replace: true })
-	}, [navigate]);
+	}, [dispatch, navigate]);
 
 	const contenidoCarrito = useSelector(state => state.carrito.materiales);
+	const estadoCreacionPedido = useSelector(state => state.carrito.estado);
+	const errorCreacionPedido = useSelector(state => state.carrito.error);
+	const resultadoCreacionPedido = useSelector(state => state.carrito.resultado);
 
 	const resumenCarrito = React.useMemo(() => {
 		if (!contenidoCarrito?.length) return {
@@ -85,6 +105,34 @@ export default function PantallaCarrito() {
 			total: clon.reduce((v, m) => v + m.precio * m.cantidad, 0).toFixed(2)
 		}
 	}, [contenidoCarrito])
+
+
+
+	if (resultadoCreacionPedido) {
+		return <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
+			<CheckCircleOutlineIcon color="success" sx={{ mx: 'auto', width: '100px', height: '100px' }} />
+			<Typography variant="caption" component="div" sx={{ fontSize: '110%', mx: 'auto', mt: 3, textAlign: 'center', fontWeight: 'bold' }}>
+				Su pedido se ha registrado correctamente
+			</Typography>
+			<Typography variant="caption" component="div" sx={{ fontSize: '105%', mx: 'auto', textAlign: 'center' }}>
+				El número de su pedido es:
+			</Typography>
+
+			<Box sx={{ mx: 'auto', mt: 2 }}>
+				<Chip color="primary" label={resultadoCreacionPedido.numeroPedido.toUpperCase()} variant="filled" sx={{ fontSize: '105%', fontFamily: 'consolas, monospace' }} />
+			</Box>
+			<Button
+				variant="outlined"
+				color="secondary"
+				onClick={() => fnIrCatalogo({ limpiarCarrito: true })}
+				sx={{ mt: 6, mx: 'auto' }}
+				startIcon={<ArrowBackIcon />}
+			>
+				Volver al catálogo
+			</Button>
+		</Box>
+	}
+
 
 	return (
 		<Grid container spacing={2} sx={{ flexGrow: 1, mx: 4 }}>
@@ -111,10 +159,32 @@ export default function PantallaCarrito() {
 					onClick={() => dispatch(realizarCompra())}
 					sx={{ mt: 2 }}
 					startIcon={<SendIcon />}
+					disabled={estadoCreacionPedido === 'cargando'}
 				>
 					Realizar pedido
 				</Button>
-				<Button fullWidth variant="outlined" onClick={fnIrCatalogo} color="secondary" sx={{ mt: 2 }}>Volver</Button>
+				<Button
+					fullWidth
+					variant="outlined"
+					onClick={fnIrCatalogo}
+					color="secondary"
+					sx={{ mt: 2 }}
+					disabled={estadoCreacionPedido === 'cargando'}
+					startIcon={<ArrowBackIcon />}
+				>
+					Volver al catálogo
+				</Button>
+
+				{estadoCreacionPedido === 'cargando' &&
+					<Box sx={{ mt: 2, display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
+						<div><CircularProgress /></div>
+						<Typography sx={{ ml: 2, mt: 0.5 }} variant="h6" component="div">Creando pedido</Typography>
+					</Box>
+				}
+
+				{errorCreacionPedido &&
+					<Alert color="error">{errorCreacionPedido.toString()}</Alert>
+				}
 			</Grid>
 
 		</Grid>
