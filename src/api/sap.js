@@ -1,11 +1,13 @@
 import { autenticar } from "./sap/autenticar";
 import { consultaCatalogo } from "./sap/consultaCatalogo";
+import { consultaVales } from "./sap/consultaVales";
 
 
 const SAP = function (R, A) {
 	return {
 		autenticar: (usuario, password) => autenticar(R, A, usuario, password),
-		consultaCatalogo: (patronBusqueda, pagina, limite) => consultaCatalogo(R, A, patronBusqueda, pagina, limite)
+		consultaCatalogo: (patronBusqueda, pagina, limite) => consultaCatalogo(R, A, patronBusqueda, pagina, limite),
+		consultaVales: (mes, ano) => consultaVales(R, A, mes, ano)
 	}
 }
 
