@@ -3,6 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -86,7 +87,7 @@ export default function PantallaCarrito() {
 	let fnIrCatalogo = React.useCallback((opciones = {}) => {
 		let { limpiarCarrito } = opciones;
 		if (limpiarCarrito) dispatch(reiniciarEstadoCarrito())
-		navigate('catalogo', { replace: true })
+		navigate('/vales/catalogo', { replace: true })
 	}, [dispatch, navigate]);
 
 	const contenidoCarrito = useSelector(state => state.carrito.materiales);
@@ -134,6 +135,24 @@ export default function PantallaCarrito() {
 		</Box>
 	}
 
+	if (!contenidoCarrito.length) {
+		return <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
+			<ProductionQuantityLimitsIcon color="info" sx={{ mx: 'auto', width: '100px', height: '100px' }} />
+			<Typography variant="caption" component="div" sx={{ fontSize: '110%', mx: 'auto', mt: 3, textAlign: 'center', fontWeight: 'bold' }}>
+				¡No tiene ningún artículo en el carrito!
+			</Typography>
+			
+			<Button
+				variant="outlined"
+				color="secondary"
+				onClick={() => fnIrCatalogo()}
+				sx={{ mt: 6, mx: 'auto' }}
+				startIcon={<ArrowBackIcon />}
+			>
+				Ir al catálogo
+			</Button>
+		</Box>
+	}
 
 	return (
 		<Grid container spacing={2} sx={{ flexGrow: 1, mx: 4 }}>

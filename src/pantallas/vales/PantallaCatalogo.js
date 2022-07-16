@@ -8,6 +8,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import SwitchAccessShortcutIcon from '@mui/icons-material/SwitchAccessShortcut';
 
 // REDUX
 import { useDispatch, useSelector } from "react-redux";
@@ -32,8 +33,12 @@ const LineaArticulo = ({ codigo, nombre, stock, precio, imagen }) => {
 					<Typography variant="body1" component="div">{nombre}</Typography>
 					<Typography variant="body2" component="div">{precio} €</Typography>
 					<Box sx={{ display: 'flex', justifyContent: 'flex-end', pr: 3, mt: 3 }}>
-						<Typography variant="body2" component="div" sx={{ color: 'text.disabled', fontSize: '80%' }}>
-							{stock} unidad{stock !== 1 && 'es'} en stock
+						<Typography variant="body2" component="div" sx={{ color: stock ? 'text.disabled' : 'error.main', fontSize: '80%' }}>
+							{stock ?
+								`${stock} unidad${stock !== 1 && 'es'} en stock`
+								:
+								'Fuera de stock'
+							}
 						</Typography>
 					</Box>
 				</Grid>
@@ -64,7 +69,7 @@ const DialogoDetalleArticulo = () => {
 		dispatch(setMaterialSeleccionado(null))
 	}, [dispatch])
 	const fnVerCarrito = React.useCallback(() => {
-		navigate('carrito', { replace: true });
+		navigate('/vales/carrito', { replace: true });
 		fnDeseleccionarMaterial();
 	}, [navigate, fnDeseleccionarMaterial]);
 	const fnAnadirCarrito = React.useCallback(() => {
@@ -240,7 +245,7 @@ export default function PantallaCatalogo() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	let fnVerCarrito = React.useCallback(() => navigate('carrito', { replace: true }), [navigate]);
+	let fnVerCarrito = React.useCallback(() => navigate('/vales/carrito', { replace: true }), [navigate]);
 	let refPatronBusqueda = React.useRef();
 	let fnEstablecerPatronBusqueda = React.useCallback(() => dispatch(setPatronBusqueda(refPatronBusqueda.current.value)), [dispatch]);
 	let fnActualizaCatalogo = React.useCallback(() => dispatch(actualizarCatalogo()), [dispatch]);
@@ -267,10 +272,20 @@ export default function PantallaCatalogo() {
 			})}
 		</Grid>
 	} else {
-		contenido = <Box sx={{ mt: 18, display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
-			<div><SentimentVeryDissatisfiedIcon sx={{ width: '100px', height: '100px', color: 'text.disabled' }} /></div>
-			<Typography sx={{ ml: 2, mt: 2.9, color: 'text.disabled' }} variant="h3" component="div">Sin resultados</Typography>
-		</Box>
+		if (estadoCatalogo === 'inicial') {
+			contenido = <><Box sx={{ mt: 10, display: 'flex', justifyContent: 'flex-start', flexDirection: 'row' }}>
+				<div><SwitchAccessShortcutIcon sx={{ width: '100px', height: '100px', color: 'text.disabled' }} /></div>
+				<Typography sx={{ ml: 2, mt: 8, color: 'text.disabled' }} variant="h3" component="div">Busca algún artículo</Typography>
+
+			</Box>
+				<Typography sx={{ ml: 5, mt: 2, color: 'text.disabled' }} variant="body1" component="div">Por ejemplo: "IA gel", "Aloe vera" o "Tiritas"</Typography>
+			</>
+		} else {
+			contenido = <Box sx={{ mt: 18, display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
+				<div><SentimentVeryDissatisfiedIcon sx={{ width: '100px', height: '100px', color: 'text.disabled' }} /></div>
+				<Typography sx={{ ml: 2, mt: 2.9, color: 'text.disabled' }} variant="h3" component="div">Sin resultados</Typography>
+			</Box>
+		}
 	}
 
 
