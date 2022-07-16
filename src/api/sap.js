@@ -1,13 +1,15 @@
 import { autenticar } from "./sap/autenticar";
 import { consultaCatalogo } from "./sap/consultaCatalogo";
 import { consultaVales } from "./sap/consultaVales";
+import { descargarAlbaranPdf } from "./sap/descargarAlbaranPdf";
 
 
 const SAP = function (R, A) {
 	return {
 		autenticar: (usuario, password) => autenticar(R, A, usuario, password),
 		consultaCatalogo: (patronBusqueda, pagina, limite) => consultaCatalogo(R, A, patronBusqueda, pagina, limite),
-		consultaVales: (mes, ano) => consultaVales(R, A, mes, ano)
+		consultaVales: (mes, ano) => consultaVales(R, A, mes, ano),
+		descargarAlbaranPdf: (albaran) => descargarAlbaranPdf(R, A, albaran)
 	}
 }
 

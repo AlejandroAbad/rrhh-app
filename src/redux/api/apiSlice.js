@@ -21,7 +21,7 @@ export const solicitarToken = createAsyncThunk('api/solicitarToken',
 export const apiSlice = createSlice({
 	name: 'api',
 	initialState: {
-		urlBase: 'https://t01-ws.hefame.es',
+		urlBase: 'https://p01-ws.hefame.es',
 		urlFedicom: 'https://fedicom3-dev.hefame.es',
 		jwtFedicom: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbXBsZWFkbyIsImF1ZCI6ImVtcGxlYWRvIiwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjEsInBlcm1hbmVudGUiOnRydWV9.ZRuw8c5uhQDpBRrJd4F__4uSSYnF4d50mUC-SsZAMOk",
 		usuario: {
