@@ -33,6 +33,7 @@ function App() {
 					<Router>
 						<Routes >
 							<Route path="/vales/*" element={<Pantallas.Vales />} />
+							<Route path="/nomina" element={<Pantallas.Nomina />} />
 							<Route path="/*" element={<Pantallas.Principal />} />
 						</Routes >
 					</Router>

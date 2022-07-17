@@ -3,7 +3,7 @@ import SAP from 'api/sap';
 
 
 
-export const descargarPdf = createAsyncThunk('descargaAlbaranPdf/descargarPdf',
+export const descargarAlbaranPdf = createAsyncThunk('albaranPdf/descargarPdf',
 	async ({ numeroAlbaran, modoVisualizacion }, redux) => {
 
 		try {
@@ -18,7 +18,7 @@ export const descargarPdf = createAsyncThunk('descargaAlbaranPdf/descargarPdf',
 
 
 export const descargaAlbaranPdfSlice = createSlice({
-	name: 'vales',
+	name: 'albaranPdf',
 	initialState: {
 		descargas: {},
 		tmpNumeroAlbaran: null,
@@ -35,7 +35,7 @@ export const descargaAlbaranPdfSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
-			.addCase(descargarPdf.pending, (state) => {
+			.addCase(descargarAlbaranPdf.pending, (state) => {
 				state.descargas[state.tmpNumeroAlbaran] = {
 					estado: 'cargando',
 					error: null,
@@ -45,7 +45,7 @@ export const descargaAlbaranPdfSlice = createSlice({
 				state.tmpNumeroAlbaran = null;
 				state.tmpModoVisualizacion = null;
 			})
-			.addCase(descargarPdf.fulfilled, (state, action) => {
+			.addCase(descargarAlbaranPdf.fulfilled, (state, action) => {
 				let { pdf, numeroAlbaran, modoVisualizacion } = action.payload;
 				state.descargas[numeroAlbaran] = {
 					estado: 'completado',
@@ -54,7 +54,7 @@ export const descargaAlbaranPdfSlice = createSlice({
 					modoVisualizacion: modoVisualizacion
 				};
 			})
-			.addCase(descargarPdf.rejected, (state, action) => {
+			.addCase(descargarAlbaranPdf.rejected, (state, action) => {
 				let { error, numeroAlbaran, modoVisualizacion } = action.payload;
 				state.descargas[numeroAlbaran] = {
 					estado: 'error',

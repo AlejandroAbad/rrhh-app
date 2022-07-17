@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { Alert, Box, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, LinearProgress, MenuItem, Paper, Select, Stack, Typography, useMediaQuery } from "@mui/material";
+import { Alert, Box, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, LinearProgress, MenuItem, Paper, Select, Stack, Typography } from "@mui/material";
 import SentimentNeutralIcon from '@mui/icons-material/SentimentNeutral';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SearchIcon from '@mui/icons-material/Search';
@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { consultarVales } from 'redux/api/valesSlice';
-import { completarDescargaAlbaranPdf, descargarPdf, preparaDescargaAlbaranPdf } from 'redux/api/albaranPdfSlice';
+import { completarDescargaAlbaranPdf, descargarAlbaranPdf, preparaDescargaAlbaranPdf } from 'redux/api/albaranPdfSlice';
 
 
 
@@ -49,7 +49,7 @@ const LineaVale = ({ /*numeroPedido, */numeroAlbaran, fechaCreacion, precio, uni
 			return;
 		}
 		dispatch(preparaDescargaAlbaranPdf({ numeroAlbaran, modoVisualizacion }));
-		dispatch(descargarPdf({ numeroAlbaran, modoVisualizacion }));
+		dispatch(descargarAlbaranPdf({ numeroAlbaran, modoVisualizacion }));
 	}, [dispatch, albaran, numeroAlbaran, lanzarDescarga, lanzarVisualizacion]);
 
 	React.useEffect(() => {

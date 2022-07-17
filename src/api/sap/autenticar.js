@@ -13,11 +13,7 @@ export const autenticar = async (redux, abortController, usuario, password) => {
 
 	let respuesta = await llamadaSap(redux, abortController, 'post', '/api/zhr_login_api/', body, headers);
 
-	
-
 	let json = await obtenerJson(respuesta);
-
-	console.log(json);
 	
 	if (json.token) {
 		return {
