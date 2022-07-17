@@ -1,4 +1,5 @@
 import { endOfMonth, format, parse } from "date-fns";
+import { es } from "date-fns/locale";
 import llamadaSap, { obtenerJson } from "./llamadaSap";
 
 
@@ -10,12 +11,9 @@ export const consultaVales = async (redux, abortController, mes, ano) => {
 
 	let fechaInicial = parse(`${ano}${mes}01`, 'yyyyMMdd', new Date())
 	let fechaFinal = endOfMonth(fechaInicial);
-
 	let url = `/api/zsf_get_order_list/find?date_ini=${format(fechaInicial, 'yyyyMMdd')}&date_end=${format(fechaFinal, 'yyyyMMdd')}&customer=${empleado}&customer_typ=2`;
 
 	let respuesta = await llamadaSap(redux, abortController, 'get', url);
-
-
 	let json = await obtenerJson(respuesta);
 
 	if (Array.isArray(json)) {
@@ -30,8 +28,7 @@ export const consultaVales = async (redux, abortController, mes, ano) => {
 			return {
 				numeroPedido: e.order,
 				numeroAlbaran: e.oproforma,
-				fechaAlbaran: e.prof_date,
-				fechaCreacion: `${e.order_dat} ${e.order_tim}`,
+				fechaCreacion: format(parse(`${e.order_dat} ${e.order_tim}`, 'yyyy-MM-dd HH:mm:ss', new Date()), 'dd MMMM yyyy HH:mm', {locale: es}),
 				precio: Math.max(e.amount_or, e.amount_ne),
 				unidades: e.unidades,
 				lineas: e.lineas

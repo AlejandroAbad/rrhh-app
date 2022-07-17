@@ -121,7 +121,12 @@ export default function PantallaCarrito() {
 			</Typography>
 
 			<Box sx={{ mx: 'auto', mt: 2 }}>
-				<Chip color="primary" label={resultadoCreacionPedido.numeroPedido.toUpperCase()} variant="filled" sx={{ fontSize: '105%', fontFamily: 'consolas, monospace' }} />
+				<Chip 
+				color="primary" 
+				label={resultadoCreacionPedido.numeroPedido.toUpperCase()} 
+				variant="filled" 
+				sx={{ p:2,  fontWeight: 'bold', fontSize: '115%', fontFamily: 'consolas, monospace' }} 
+				/>
 			</Box>
 			<Button
 				variant="outlined"
