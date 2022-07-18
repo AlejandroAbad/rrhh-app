@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { Alert, Box, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, LinearProgress, MenuItem, Paper, Select, Stack, Typography } from "@mui/material";
+import { Alert, Box,  CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, LinearProgress, MenuItem, Paper, Select, Stack, Typography } from "@mui/material";
 import SentimentNeutralIcon from '@mui/icons-material/SentimentNeutral';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SearchIcon from '@mui/icons-material/Search';
@@ -62,8 +62,8 @@ const LineaVale = ({ /*numeroPedido, */numeroAlbaran, fechaCreacion, precio, uni
 	return <Paper sx={{ p: 1, mb: 1, fontSize: '110%' }} square >
 		<a ref={refDescargaPdf} href="/" style={{ display: 'none' }}>as</a>
 		<Grid container>
-			<Grid item xs={1} sx={{ ml: 2, mr: 4, pl: 1 }}>
-				{albaran?.estado === 'cargando' ? <LinearProgress sx={{ mt: 2.3, mb: 2.2 }} /> : <>
+			<Grid item xs="auto" sx={{ ml: 2, mr: 4, pl: 1, minWidth: '90px' }}>
+				{albaran?.estado === 'cargando' ? <><LinearProgress sx={{ mt: 2.3, mb: 2.2 }} /></> : <>
 					<IconButton color="secondary" onClick={() => fnDescargarAlbaran('descarga')} disabled={albaran?.estado === 'cargando'}>
 						<PictureAsPdfIcon />
 					</IconButton>
@@ -133,12 +133,12 @@ export default function PantallaConsulta() {
 	let contenido = null;
 
 	if (estadoConsultaVales === "cargando") {
-		contenido = <Box sx={{ m: 4, display: 'flex', flexDirection: 'row' }}>
-			<div><CircularProgress /></div>
-			<Typography sx={{ ml: 2, mt: 0.5 }} variant="h6" component="div">Consultando vales</Typography>
+		contenido = <Box sx={{ m: 'auto', width: '400px', textAlign: 'center' }}>
+			<CircularProgress size={80} />
+			<Typography sx={{ ml: 2, mt: 1, color: 'text.disabled', fontWeight: 'bold' }} variant="h4" component="div">Consultando vales</Typography>
 		</Box>
 	} else if (error) {
-		contenido = JSON.stringify(error);
+		contenido = <Alert severity="error">JSON.stringify(error)</Alert>;
 	} else if (vales?.length > 0) {
 		contenido = <Stack sx={{ mt: 2 }}>
 			{vales.map(vale => {
@@ -146,46 +146,48 @@ export default function PantallaConsulta() {
 			})}
 		</Stack>
 	} else {
-		contenido = <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-			<div><SentimentNeutralIcon sx={{ width: '100px', height: '100px', color: 'text.disabled' }} /></div>
-			<Typography sx={{ ml: 2, mt: 2.9, color: 'text.disabled' }} variant="h3" component="div">Sin resultados</Typography>
+		contenido = <Box sx={{ m:'auto', width: '400px', textAlign: 'center' }}>
+			<div><SentimentNeutralIcon sx={{ width: '80px', height: '80px', color: 'text.disabled' }} /></div>
+			<Typography sx={{ ml: 2, mt: 1, color: 'text.disabled', fontWeight: 'bold' }} variant="h4" component="div">Sin resultados</Typography>
 		</Box>
 	}
 
-	return <Box>
-
-		<Typography variant="h5">Mis vales</Typography>
-
-		<Box>
-			<FormControl sx={{ m: 1, minWidth: 120 }}>
-				<InputLabel id="mes-helper-label">Mes</InputLabel>
-				<Select
-					labelId="mes-helper-label"
-					value={fecha.mes}
-					label="Mes"
-					onChange={setMes}
-					disabled={estadoConsultaVales === "cargando"}
-					color="secondary"
-				>
-					{mesesDisponibles.map((nombreMes, i) => <MenuItem key={i} value={i}>{nombreMes}</MenuItem>)}
-				</Select>
-			</FormControl>
-			<FormControl sx={{ m: 1, minWidth: 120 }}>
-				<InputLabel id="ano-helper-label">Año</InputLabel>
-				<Select
-					labelId="ano-helper-label"
-					value={fecha.ano}
-					label="Año"
-					onChange={setAno}
-					disabled={estadoConsultaVales === "cargando"}
-					color="secondary"
-				>
-					{ANOS.map(nombreAno => <MenuItem key={nombreAno} value={nombreAno}>{nombreAno}</MenuItem>)}
-				</Select>
-			</FormControl>
+	return <>
+		<Box sx={{ width: '800px', m: 'auto', mt: 4 }}>
+			<Typography variant="h4" sx={{ m: 'auto', my: 2 }}>Mis vales</Typography>
+			<Typography>Para consultar tus Vales de Emplead@, selecciona el mes y el año que deseas visualizar.</Typography>
+			<Box sx={{ width: '360px', m: 'auto', mt: 6 }}>
+				<FormControl sx={{ m: 1, minWidth: 120 }}>
+					<InputLabel id="mes-helper-label">Mes</InputLabel>
+					<Select
+						labelId="mes-helper-label"
+						value={fecha.mes}
+						label="Mes"
+						onChange={setMes}
+						disabled={estadoConsultaVales === "cargando"}
+						color="secondary"
+						sx={{width: '22ch'}}
+					>
+						{mesesDisponibles.map((nombreMes, i) => <MenuItem key={i} value={i}>{nombreMes}</MenuItem>)}
+					</Select>
+				</FormControl>
+				<FormControl sx={{ m: 1, minWidth: 120 }}>
+					<InputLabel id="ano-helper-label">Año</InputLabel>
+					<Select
+						labelId="ano-helper-label"
+						value={fecha.ano}
+						label="Año"
+						onChange={setAno}
+						disabled={estadoConsultaVales === "cargando"}
+						color="secondary"
+					>
+						{ANOS.map(nombreAno => <MenuItem key={nombreAno} value={nombreAno}>{nombreAno}</MenuItem>)}
+					</Select>
+				</FormControl>
+			</Box>
 		</Box>
 
-		<Box>
+		<Box sx={{ mx:'auto', mt: 6, width: '800px' }}>
 			{contenido}
 		</Box>
 
@@ -226,7 +228,7 @@ export default function PantallaConsulta() {
 
 
 
-	</Box>
+	</>
 
 
 }

@@ -23,7 +23,7 @@ const LineaArticulo = ({ codigo, nombre, stock, precio, imagen }) => {
 	const fnSeleccionarMaterial = React.useCallback(() => { dispatch(setMaterialSeleccionado(codigo)) }, [dispatch, codigo]);
 
 	return <Grid item xs={6} >
-		<Paper elevation={1} square sx={{ height: 130, pt: 2 }} onClick={fnSeleccionarMaterial}>
+		<Paper elevation={1} square sx={{ height: 130, pt: 2, cursor: 'pointer' }} onClick={fnSeleccionarMaterial}>
 			<Grid container sx={{ height: 130 }}>
 				<Grid item xs={3} sx={{ textAlign: 'center', verticalAlign: 'center' }}>
 					<img alt="" src={imagen} style={{ maxWidth: '100px', maxHeight: '100px' }} />
@@ -291,7 +291,7 @@ export default function PantallaCatalogo() {
 
 	return (
 		<>
-			<Grid container spacing={2} sx={{ position: 'fixed', width: '100%', bgcolor: '#ffffff', top: 6, pb: 2, zIndex: 10 }}>
+			<Grid container spacing={2} sx={{ position: 'fixed', width: '1155px', bgcolor: '#ffffff', top: 16, left: 26, pb: 2 }}>
 				<Grid item xs={11}>
 					<FormControl fullWidth variant="outlined" color="secondary"  >
 						<InputLabel htmlFor="standard-adornment-password">Búsqueda de artículos</InputLabel>

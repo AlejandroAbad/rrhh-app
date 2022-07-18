@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Typography, Box } from "@mui/material";
 
 // REDUX
 import { useDispatch, useSelector } from "react-redux";
@@ -31,11 +31,11 @@ export default function PantallaLogin() {
 
 
 	return (
-		<div>
-			Login
+		<Box /*sx={{width: '400px', m: 'auto', mt: 8}}*/>
+			<Typography variant="h4">Identifíquese</Typography>
 
-			<LoginTextField id="usuario" label="Usuario" name="usuario" autoComplete="user" inputRef={refUsuario} disabled={cargando}  />
-			<LoginTextField name="password" label="Contraseña" type="password" id="password" autoComplete="current-password" inputRef={refPasword} disabled={cargando}  />
+			<LoginTextField id="usuario" label="Usuario" name="usuario" autoComplete="user" inputRef={refUsuario} disabled={cargando} />
+			<LoginTextField name="password" label="Contraseña" type="password" id="password" autoComplete="current-password" inputRef={refPasword} disabled={cargando} />
 
 			<Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" disabled={cargando} onClick={() => {
 				dispatch(solicitarToken({
@@ -46,6 +46,6 @@ export default function PantallaLogin() {
 				{cargando ? 'Cargando' : 'Acceder'}
 			</Button>
 
-		</div>
+		</Box>
 	)
 }

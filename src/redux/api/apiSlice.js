@@ -33,6 +33,14 @@ export const apiSlice = createSlice({
 	reducers: {
 		setApiUrlBase: (state, action) => {
 			state.urlBase = action.payload;
+		},
+		logout: (state, action) => {
+			state.usuario.datos.jwt = null;
+			state.usuario.datos.kunnr = null;
+			state.usuario.datos.pernr = null;
+			state.usuario.datos.werks = null;
+			state.usuario.estado = 'inicial';
+			state.usuario.error = null;
 		}
 	},
 	extraReducers: (builder) => {
@@ -66,5 +74,5 @@ export const apiSlice = createSlice({
 
 
 
-export const { setApiUrlBase } = apiSlice.actions;
+export const { setApiUrlBase, logout } = apiSlice.actions;
 export default apiSlice.reducer;

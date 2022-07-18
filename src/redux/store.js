@@ -6,6 +6,7 @@ import carritoReducer from './api/carritoSlice';
 import valesReducer from './api/valesSlice';
 import albaranPdfReducer from './api/albaranPdfSlice';
 import nominaPdfReducer from './api/nominaPdfSlice';
+import pantallaReducer from './pantallaSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
 		carrito: carritoReducer,
 		vales: valesReducer,
 		albaranPdf: albaranPdfReducer,
-		nominaPdf: nominaPdfReducer
+		nominaPdf: nominaPdfReducer,
+		pantalla: pantallaReducer
 	},
 });

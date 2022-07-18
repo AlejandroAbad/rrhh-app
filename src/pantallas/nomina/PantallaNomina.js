@@ -38,11 +38,9 @@ export default function PantallaNomina() {
 		});
 	}, [_setFecha]);
 	const mesesDisponibles = fecha.ano === ANO ? MESES.slice(0, MES + 1) : [...MESES];
-
 	const fnDescargarNomina = React.useCallback((modoVisualizacion) => {
 		dispatch(descargarNominaPdf({ modoVisualizacion, ...fecha }))
 	}, [dispatch, fecha])
-
 	const refDescargaPdf = React.useRef();
 	const [visualizarNomina, setVisualizarNomina] = React.useState(false);
 	const nomina = useSelector(state => state.nominaPdf);
@@ -59,12 +57,10 @@ export default function PantallaNomina() {
 		dispatch(completarDescargaNominaPdf());
 	}, [dispatch, fecha, nomina])
 
-
 	const lanzarVisualizacion = React.useCallback(async () => {
 		setVisualizarNomina(true);
 		dispatch(completarDescargaNominaPdf());
 	}, [dispatch])
-
 	React.useEffect(() => {
 		if (!nomina && nomina.pdf) return;
 
@@ -75,56 +71,65 @@ export default function PantallaNomina() {
 		}
 	}, [nomina, lanzarDescargaPdf, lanzarVisualizacion])
 
-
-
-
 	let contenido = null;
 	if (nomina.estado === "cargando") {
-		contenido = <Box sx={{ m: 4, display: 'flex', flexDirection: 'row' }}>
-			<div><CircularProgress /></div>
-			<Typography sx={{ ml: 2, mt: 0.5 }} variant="h6" component="div">Consultando nómina</Typography>
+		contenido = <Box sx={{ m: 'auto', width: '400px', textAlign: 'center' }}>
+			<CircularProgress size={80} />
+			<Typography sx={{ ml: 2, mt: 1, color: 'text.disabled', fontWeight: 'bold' }} variant="h4" component="div">Consultando nómina</Typography>
 		</Box>
 	} else if (nomina.error) {
 		contenido = JSON.stringify(nomina.error);
 	}
 
-	return <Box>
+	return <>
 		<a ref={refDescargaPdf} href="/" style={{ display: 'none' }}>as</a>
-		<Typography variant="h5">Mis nóminas</Typography>
+		<Box sx={{ m: 'auto', mt: 4 }}>
+			<Typography variant="h4" sx={{ m: 'auto', my: 2 }}>Mis nóminas</Typography>
+			<Typography>
+				A través de esta herramienta podrás descargarte tus recibos de nómina. Esta utilidad se alinea con el compromiso de la empresa por el respeto al medio ambiente y a la utilización razonable del papel.
+			</Typography>
+			<Box sx={{  m: 'auto', mt: 6 }}>
+				<FormControl sx={{ m: 1,  minWidth: 120 }}>
+					<InputLabel id="ano-helper-label" color="secondary">Año</InputLabel>
+					<Select
+						labelId="ano-helper-label"
+						value={fecha.ano}
+						label="Año"
+						onChange={setAno}
+						disabled={nomina.estado === "cargando"}
+						color="secondary"
+					>
+						{ANOS.map(nombreAno => <MenuItem key={nombreAno} value={nombreAno}>{nombreAno}</MenuItem>)}
+					</Select>
+				</FormControl>
+				<FormControl sx={{ m: 1,  minWidth: 120 }}>
+					<InputLabel id="mes-helper-label" color="secondary">Mes</InputLabel>
+					<Select
+						labelId="mes-helper-label"
+						value={fecha.mes}
+						label="Mes"
+						onChange={setMes}
+						disabled={nomina.estado === "cargando"}
+						color="secondary"
+						sx={{ width: '22ch' }}
+					>
+						{mesesDisponibles.map((nombreMes, i) => <MenuItem key={i} value={i}>{nombreMes}</MenuItem>)}
+					</Select>
+				</FormControl>
+				
+			</Box>
+		</Box>
 
-		<Box sx={{ mt: 2 }}>
-			<FormControl sx={{ m: 1, minWidth: 120 }}>
-				<InputLabel id="mes-helper-label">Mes</InputLabel>
-				<Select
-					labelId="mes-helper-label"
-					value={fecha.mes}
-					label="Mes"
-					onChange={setMes}
-					disabled={nomina.estado === "cargando"}
-					color="secondary"
-				>
-					{mesesDisponibles.map((nombreMes, i) => <MenuItem key={i} value={i}>{nombreMes}</MenuItem>)}
-				</Select>
-			</FormControl>
-			<FormControl sx={{ m: 1, minWidth: 120 }}>
-				<InputLabel id="ano-helper-label">Año</InputLabel>
-				<Select
-					labelId="ano-helper-label"
-					value={fecha.ano}
-					label="Año"
-					onChange={setAno}
-					disabled={nomina.estado === "cargando"}
-					color="secondary"
-				>
-					{ANOS.map(nombreAno => <MenuItem key={nombreAno} value={nombreAno}>{nombreAno}</MenuItem>)}
-				</Select>
-			</FormControl>
+		<Box sx={{ m: 'auto', mt: 4, textAlign: 'center' }}>
+			<Button sx={{ mr: {md: 2} }} variant="contained" startIcon={<PictureAsPdfIcon />} onClick={() => fnDescargarNomina('descargar')} size="large">
+				Descargar PDF
+			</Button>
+			<Button variant="contained" startIcon={<SearchIcon />} onClick={() => fnDescargarNomina('visualizar')} size="large">
+				Visualizar
+			</Button>
 		</Box>
-		<Box sx={{ mt: 2 }}>
-			<Button sx={{ mr: 2 }} variant="contained" startIcon={<PictureAsPdfIcon />} onClick={() => fnDescargarNomina('descargar')}>Descargar PDF</Button>
-			<Button variant="contained" startIcon={<SearchIcon />} onClick={() => fnDescargarNomina('visualizar')}>Visualizar</Button>
-		</Box>
-		<Box>
+
+		<Box sx={{ mt: 4 }}>
 			{contenido}
 		</Box>
 
@@ -150,7 +155,7 @@ export default function PantallaNomina() {
 
 
 
-	</Box>
+	</>
 
 
 }

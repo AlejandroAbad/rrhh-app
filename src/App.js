@@ -14,6 +14,9 @@ import { useSelector } from 'react-redux';
 
 
 import Pantallas from './pantallas/Pantallas';
+import BarraSuperior from 'navegacion/superior/BarraSuperior';
+import DrawerLateral from 'navegacion/lateral/DrawerLateral';
+import { Container, Paper } from '@mui/material';
 
 
 
@@ -21,24 +24,35 @@ import Pantallas from './pantallas/Pantallas';
 
 function App() {
 
-	let usuarioApi = useSelector(state => state.api.usuario.datos);
+	const usuario = useSelector(state => state.api.usuario.datos);
+	const [drawerAbierto, setDrawerAbierto] = React.useState(false);
+	const fnMostrarDrawerLateral = React.useCallback((flag) => {
+		if (flag === undefined) setDrawerAbierto(!drawerAbierto);
+		else setDrawerAbierto(flag ? true : false);
+	}, [drawerAbierto, setDrawerAbierto]);
 
 	return (
 		<ThemeProvider theme={tema}>
-			<CssBaseline />
+			<Router>
+				<CssBaseline />
 
-			<div className="App">
-				{(!usuarioApi?.jwt) ?
-					<Pantallas.Login /> :
-					<Router>
-						<Routes >
-							<Route path="/vales/*" element={<Pantallas.Vales />} />
-							<Route path="/nomina" element={<Pantallas.Nomina />} />
-							<Route path="/*" element={<Pantallas.Principal />} />
-						</Routes >
-					</Router>
-				}
-			</div>
+				{usuario?.jwt && <DrawerLateral abierto={drawerAbierto} fnCerrar={() => fnMostrarDrawerLateral(false)} fnAbrir={() => fnMostrarDrawerLateral(true)} />}
+				<BarraSuperior onMenuLateralClick={fnMostrarDrawerLateral} />
+
+				<Container fixed disableGutters sx={{ mt: { xs: 2, sm: 4 } }}>
+					<Paper elevation={2} sx={{ pt: 4, pb: 6, px: {xs: 2, lg: 12 } }}>
+						{(!usuario?.jwt) ?
+							<Pantallas.Login /> :
+							<Routes >
+								<Route path="/vales/*" element={<Pantallas.Vales />} />
+								<Route path="/nomina" element={<Pantallas.Nomina />} />
+								<Route path="/*" element={<Pantallas.Principal />} />
+							</Routes >
+
+						}
+					</Paper>
+				</Container>
+			</Router>
 		</ThemeProvider>
 	);
 }

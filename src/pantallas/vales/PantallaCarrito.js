@@ -121,11 +121,11 @@ export default function PantallaCarrito() {
 			</Typography>
 
 			<Box sx={{ mx: 'auto', mt: 2 }}>
-				<Chip 
-				color="primary" 
-				label={resultadoCreacionPedido.numeroPedido.toUpperCase()} 
-				variant="filled" 
-				sx={{ p:2,  fontWeight: 'bold', fontSize: '115%', fontFamily: 'consolas, monospace' }} 
+				<Chip
+					color="primary"
+					label={resultadoCreacionPedido.numeroPedido.toUpperCase()}
+					variant="filled"
+					sx={{ p: 2, fontWeight: 'bold', fontSize: '115%', fontFamily: 'consolas, monospace' }}
 				/>
 			</Box>
 			<Button
@@ -141,12 +141,11 @@ export default function PantallaCarrito() {
 	}
 
 	if (!contenidoCarrito.length) {
-		return <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
-			<ProductionQuantityLimitsIcon color="info" sx={{ mx: 'auto', width: '100px', height: '100px' }} />
-			<Typography variant="caption" component="div" sx={{ fontSize: '110%', mx: 'auto', mt: 3, textAlign: 'center', fontWeight: 'bold' }}>
+		return <Box sx={{ m: 'auto', mt: 4, width: '400px', textAlign: 'center' }}>
+			<ProductionQuantityLimitsIcon color="info" sx={{ mx: 'auto', width: '80px', height: '80px' }} />
+			<Typography sx={{ ml: 2, mt: 1, color: 'text.disabled', fontWeight: 'bold' }} variant="h5" component="div">
 				¡No tiene ningún artículo en el carrito!
 			</Typography>
-			
 			<Button
 				variant="outlined"
 				color="secondary"
@@ -160,22 +159,18 @@ export default function PantallaCarrito() {
 	}
 
 	return (
-		<Grid container spacing={2} sx={{ flexGrow: 1, mx: 4 }}>
+		<Grid container spacing={4} sx={{ px: 4 }}>
 			<Grid item xs={8}>
-				<Typography variant="h5" sx={{ mb: 2 }}>Resumen del pedido</Typography>
+				<Typography variant="h4" sx={{ m: 'auto', my: 2 }}>Resumen del carrito</Typography>
 				{resumenCarrito.materiales}
 			</Grid>
 			<Grid item xs={4}>
-
-				<Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 6 }}>
+				<Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 10 }}>
 					<Typography sx={{ fontSize: '140%' }}>
 						Precio total:
 					</Typography>
 					<Typography sx={{ color: 'text.primary', fontWeight: 'bold', ml: 1, fontSize: '140%' }}>
-						{resumenCarrito.total}
-					</Typography>
-					<Typography sx={{ fontWeight: 'bold', fontSize: '140%' }}>
-						€
+						{resumenCarrito.total}€
 					</Typography>
 				</Box>
 				<Button
@@ -214,6 +209,7 @@ export default function PantallaCarrito() {
 						{errorCreacionPedido.map((error, i) => <div key={i}>• {error.descripcion} <small>[{error.codigo}]</small></div>)}
 					</Alert>
 				}
+
 			</Grid>
 
 		</Grid>
