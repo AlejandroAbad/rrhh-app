@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, TextField, Typography, Box } from "@mui/material";
+import { Button, TextField, Typography, Container } from "@mui/material";
 
 // REDUX
 import { useDispatch, useSelector } from "react-redux";
@@ -31,7 +31,7 @@ export default function PantallaLogin() {
 
 
 	return (
-		<Box /*sx={{width: '400px', m: 'auto', mt: 8}}*/>
+		<Container maxWidth="sm">
 			<Typography variant="h4">Identifíquese</Typography>
 
 			<LoginTextField id="usuario" label="Usuario" name="usuario" autoComplete="user" inputRef={refUsuario} disabled={cargando} />
@@ -46,6 +46,6 @@ export default function PantallaLogin() {
 				{cargando ? 'Cargando' : 'Acceder'}
 			</Button>
 
-		</Box>
+		</Container>
 	)
 }

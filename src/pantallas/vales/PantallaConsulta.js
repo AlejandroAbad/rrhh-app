@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { Alert, Box,  CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, LinearProgress, MenuItem, Paper, Select, Stack, Typography } from "@mui/material";
+import { Alert, Box, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, LinearProgress, MenuItem, Paper, Select, Stack, Typography } from "@mui/material";
 import SentimentNeutralIcon from '@mui/icons-material/SentimentNeutral';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SearchIcon from '@mui/icons-material/Search';
@@ -36,12 +36,10 @@ const LineaVale = ({ /*numeroPedido, */numeroAlbaran, fechaCreacion, precio, uni
 		a.href = '';
 		dispatch(completarDescargaAlbaranPdf(numeroAlbaran));
 	}, [dispatch, numeroAlbaran, albaran])
-
 	const lanzarVisualizacion = React.useCallback(async () => {
 		fnVisualizarAlbaran({ numeroAlbaran, pdf: albaran.pdf });
 		dispatch(completarDescargaAlbaranPdf(numeroAlbaran));
 	}, [dispatch, numeroAlbaran, fnVisualizarAlbaran, albaran])
-
 	const fnDescargarAlbaran = React.useCallback(modoVisualizacion => {
 		if (albaran?.estado === "completado" && albaran.pdf) {
 			if (modoVisualizacion === 'descarga') lanzarDescarga();
@@ -51,7 +49,6 @@ const LineaVale = ({ /*numeroPedido, */numeroAlbaran, fechaCreacion, precio, uni
 		dispatch(preparaDescargaAlbaranPdf({ numeroAlbaran, modoVisualizacion }));
 		dispatch(descargarAlbaranPdf({ numeroAlbaran, modoVisualizacion }));
 	}, [dispatch, albaran, numeroAlbaran, lanzarDescarga, lanzarVisualizacion]);
-
 	React.useEffect(() => {
 		if (albaran?.estado === "completado" && albaran.pdf) {
 			if (albaran.modoVisualizacion === 'descarga') lanzarDescarga();
@@ -133,9 +130,9 @@ export default function PantallaConsulta() {
 	let contenido = null;
 
 	if (estadoConsultaVales === "cargando") {
-		contenido = <Box sx={{ m: 'auto', width: '400px', textAlign: 'center' }}>
-			<CircularProgress size={80} />
-			<Typography sx={{ ml: 2, mt: 1, color: 'text.disabled', fontWeight: 'bold' }} variant="h4" component="div">Consultando vales</Typography>
+		contenido = <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
+			<CircularProgress size={40} />
+			<Typography sx={{ ml: 2, mt: 1 }} variant="h5" component="div">Consultando vales</Typography>
 		</Box>
 	} else if (error) {
 		contenido = <Alert severity="error">JSON.stringify(error)</Alert>;
@@ -146,19 +143,19 @@ export default function PantallaConsulta() {
 			})}
 		</Stack>
 	} else {
-		contenido = <Box sx={{ m:'auto', width: '400px', textAlign: 'center' }}>
-			<div><SentimentNeutralIcon sx={{ width: '80px', height: '80px', color: 'text.disabled' }} /></div>
-			<Typography sx={{ ml: 2, mt: 1, color: 'text.disabled', fontWeight: 'bold' }} variant="h4" component="div">Sin resultados</Typography>
+		contenido = <Box sx={{ m: 'auto', width: '400px', textAlign: 'center' }}>
+			<div><SentimentNeutralIcon sx={{ width: '60px', height: '60px', color: 'secondary.light' }} /></div>
+			<Typography sx={{ ml: 2, mt: 1 }} variant="h5" component="div">Sin resultados</Typography>
 		</Box>
 	}
 
 	return <>
-		<Box sx={{ width: '800px', m: 'auto', mt: 4 }}>
-			<Typography variant="h4" sx={{ m: 'auto', my: 2 }}>Mis vales</Typography>
+		<Box sx={{ m: 'auto' }}>
+			<Typography variant="h4" sx={{ m: 'auto', mb: 2 }}>Mis vales</Typography>
 			<Typography>Para consultar tus Vales de Emplead@, selecciona el mes y el año que deseas visualizar.</Typography>
-			<Box sx={{ width: '360px', m: 'auto', mt: 6 }}>
-				<FormControl sx={{ m: 1, minWidth: 120 }}>
-					<InputLabel id="mes-helper-label">Mes</InputLabel>
+			<Box sx={{ mb: 4, mt: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+				<FormControl sx={{ m: 1 }}>
+					<InputLabel id="mes-helper-label" color="secondary">Mes</InputLabel>
 					<Select
 						labelId="mes-helper-label"
 						value={fecha.mes}
@@ -166,13 +163,13 @@ export default function PantallaConsulta() {
 						onChange={setMes}
 						disabled={estadoConsultaVales === "cargando"}
 						color="secondary"
-						sx={{width: '22ch'}}
+						sx={{ width: '20ch' }}
 					>
 						{mesesDisponibles.map((nombreMes, i) => <MenuItem key={i} value={i}>{nombreMes}</MenuItem>)}
 					</Select>
 				</FormControl>
-				<FormControl sx={{ m: 1, minWidth: 120 }}>
-					<InputLabel id="ano-helper-label">Año</InputLabel>
+				<FormControl sx={{ m: 1 }}>
+					<InputLabel id="ano-helper-label" color="secondary">Año</InputLabel>
 					<Select
 						labelId="ano-helper-label"
 						value={fecha.ano}
@@ -180,6 +177,7 @@ export default function PantallaConsulta() {
 						onChange={setAno}
 						disabled={estadoConsultaVales === "cargando"}
 						color="secondary"
+						sx={{ width: '12ch' }}
 					>
 						{ANOS.map(nombreAno => <MenuItem key={nombreAno} value={nombreAno}>{nombreAno}</MenuItem>)}
 					</Select>
@@ -187,10 +185,7 @@ export default function PantallaConsulta() {
 			</Box>
 		</Box>
 
-		<Box sx={{ mx:'auto', mt: 6, width: '800px' }}>
-			{contenido}
-		</Box>
-
+		{contenido}
 
 		<Dialog
 			fullWidth

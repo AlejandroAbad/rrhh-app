@@ -39,8 +39,8 @@ function App() {
 				{usuario?.jwt && <DrawerLateral abierto={drawerAbierto} fnCerrar={() => fnMostrarDrawerLateral(false)} fnAbrir={() => fnMostrarDrawerLateral(true)} />}
 				<BarraSuperior onMenuLateralClick={fnMostrarDrawerLateral} />
 
-				<Container fixed disableGutters sx={{ mt: { xs: 2, sm: 4 } }}>
-					<Paper elevation={2} sx={{ pt: 4, pb: 6, px: {xs: 2, lg: 12 } }}>
+				<Container fixed disableGutters sx={{ mt: { xs: 6, sm: 8 } }}>
+					<Paper elevation={2} sx={{ pt: 4, pb: 6, px: {xs: 3, sm: 6, md: 12 } }}>
 						{(!usuario?.jwt) ?
 							<Pantallas.Login /> :
 							<Routes >

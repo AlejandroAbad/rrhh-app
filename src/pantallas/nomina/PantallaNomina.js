@@ -1,12 +1,13 @@
 import React from 'react';
 
-import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, Typography, useMediaQuery } from "@mui/material";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { completarDescargaNominaPdf, descargarNominaPdf } from 'redux/api/nominaPdfSlice';
+import { useTheme } from '@emotion/react';
 
 
 
@@ -44,7 +45,6 @@ export default function PantallaNomina() {
 	const refDescargaPdf = React.useRef();
 	const [visualizarNomina, setVisualizarNomina] = React.useState(false);
 	const nomina = useSelector(state => state.nominaPdf);
-
 	const lanzarDescargaPdf = React.useCallback(async () => {
 		const base64Response = await fetch(`data:application/pdf;base64,${nomina.pdf}`);
 		const blob = await base64Response.blob();
@@ -56,7 +56,6 @@ export default function PantallaNomina() {
 		a.href = '';
 		dispatch(completarDescargaNominaPdf());
 	}, [dispatch, fecha, nomina])
-
 	const lanzarVisualizacion = React.useCallback(async () => {
 		setVisualizarNomina(true);
 		dispatch(completarDescargaNominaPdf());
@@ -71,11 +70,14 @@ export default function PantallaNomina() {
 		}
 	}, [nomina, lanzarDescargaPdf, lanzarVisualizacion])
 
+	const theme = useTheme();
+	const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
 	let contenido = null;
 	if (nomina.estado === "cargando") {
-		contenido = <Box sx={{ m: 'auto', width: '400px', textAlign: 'center' }}>
-			<CircularProgress size={80} />
-			<Typography sx={{ ml: 2, mt: 1, color: 'text.disabled', fontWeight: 'bold' }} variant="h4" component="div">Consultando nómina</Typography>
+		contenido = <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
+			<CircularProgress size={40} />
+			<Typography sx={{ ml: 2, mt: 1 }} variant="h5" component="div">Descargando nómina</Typography>
 		</Box>
 	} else if (nomina.error) {
 		contenido = JSON.stringify(nomina.error);
@@ -83,26 +85,13 @@ export default function PantallaNomina() {
 
 	return <>
 		<a ref={refDescargaPdf} href="/" style={{ display: 'none' }}>as</a>
-		<Box sx={{ m: 'auto', mt: 4 }}>
-			<Typography variant="h4" sx={{ m: 'auto', my: 2 }}>Mis nóminas</Typography>
+		<Box sx={{ m: 'auto' }}>
+			<Typography variant="h4" sx={{ m: 'auto', mb: 2 }}>Mis nóminas</Typography>
 			<Typography>
 				A través de esta herramienta podrás descargarte tus recibos de nómina. Esta utilidad se alinea con el compromiso de la empresa por el respeto al medio ambiente y a la utilización razonable del papel.
 			</Typography>
-			<Box sx={{  m: 'auto', mt: 6 }}>
-				<FormControl sx={{ m: 1,  minWidth: 120 }}>
-					<InputLabel id="ano-helper-label" color="secondary">Año</InputLabel>
-					<Select
-						labelId="ano-helper-label"
-						value={fecha.ano}
-						label="Año"
-						onChange={setAno}
-						disabled={nomina.estado === "cargando"}
-						color="secondary"
-					>
-						{ANOS.map(nombreAno => <MenuItem key={nombreAno} value={nombreAno}>{nombreAno}</MenuItem>)}
-					</Select>
-				</FormControl>
-				<FormControl sx={{ m: 1,  minWidth: 120 }}>
+			<Box sx={{ mb: 4, mt: 6, display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
+				<FormControl sx={{ m: 1 }}>
 					<InputLabel id="mes-helper-label" color="secondary">Mes</InputLabel>
 					<Select
 						labelId="mes-helper-label"
@@ -111,20 +100,46 @@ export default function PantallaNomina() {
 						onChange={setMes}
 						disabled={nomina.estado === "cargando"}
 						color="secondary"
-						sx={{ width: '22ch' }}
+						sx={{ width: '20ch' }}
 					>
 						{mesesDisponibles.map((nombreMes, i) => <MenuItem key={i} value={i}>{nombreMes}</MenuItem>)}
 					</Select>
 				</FormControl>
-				
+				<FormControl sx={{ m: 1 }}>
+					<InputLabel id="ano-helper-label" color="secondary">Año</InputLabel>
+					<Select
+						labelId="ano-helper-label"
+						value={fecha.ano}
+						label="Año"
+						onChange={setAno}
+						disabled={nomina.estado === "cargando"}
+						color="secondary"
+						sx={{ width: '12ch' }}
+					>
+						{ANOS.map(nombreAno => <MenuItem key={nombreAno} value={nombreAno}>{nombreAno}</MenuItem>)}
+					</Select>
+				</FormControl>
 			</Box>
 		</Box>
 
-		<Box sx={{ m: 'auto', mt: 4, textAlign: 'center' }}>
-			<Button sx={{ mr: {md: 2} }} variant="contained" startIcon={<PictureAsPdfIcon />} onClick={() => fnDescargarNomina('descargar')} size="large">
+		<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: { xs: 'column', sm: 'row' } }}>
+			<Button
+				sx={{ mx: 2, mt: 1, minWidth: { xs: '100%', sm: '' } }}
+				variant="contained"
+				startIcon={<PictureAsPdfIcon />} onClick={() => fnDescargarNomina('descargar')}
+				size="large"
+				disabled={nomina.estado === "cargando"}
+			>
 				Descargar PDF
 			</Button>
-			<Button variant="contained" startIcon={<SearchIcon />} onClick={() => fnDescargarNomina('visualizar')} size="large">
+			<Button
+				sx={{ mx: 2, mt: 1, minWidth: { xs: '100%', sm: '' } }}
+				variant="contained"
+				startIcon={<SearchIcon />}
+				onClick={() => fnDescargarNomina('visualizar')}
+				size="large"
+				disabled={nomina.estado === "cargando"}
+			>
 				Visualizar
 			</Button>
 		</Box>
@@ -134,21 +149,21 @@ export default function PantallaNomina() {
 		</Box>
 
 
-		<Dialog fullWidth maxWidth="lg" open={Boolean(visualizarNomina)} onClose={() => setVisualizarNomina(false)}		>
-			<DialogTitle sx={{ m: 0, mb: 1, p: 2, py: 1, bgcolor: 'primary.main', color: 'primary.contrastText' }} >
-				Nómina del empleado {MES[fecha.mes]} de {fecha.ano}
-				<IconButton onClick={() => setVisualizarNomina(false)} sx={{ position: 'absolute', right: 8, top: 4, color: (theme) => theme.palette.grey[800], }}				>
+		<Dialog fullScreen={fullScreen} fullWidth maxWidth="lg" open={Boolean(visualizarNomina)} onClose={() => setVisualizarNomina(false)}		>
+			<DialogTitle sx={{ m: 0, mb: 0, py: 1, bgcolor: 'primary.main', color: 'primary.contrastText' }} >
+				Nómina de {MESES[fecha.mes]} de {fecha.ano}
+				<IconButton onClick={() => setVisualizarNomina(false)} sx={{ position: 'absolute', right: 8, top: 4, color: th => th.palette.grey[800], }}				>
 					<CloseIcon />
 				</IconButton>
 			</DialogTitle>
-			<DialogContent>
+			<DialogContent sx={{ p: 0 }}>
 				<iframe
-					height="800px"
+					height="880px"
 					width="100%"
-					title={`Nómina del empleado ${MES[fecha.mes]} de ${fecha.ano}`}
+					title={`Nómina de ${MESES[fecha.mes]} de ${fecha.ano}`}
 					src={"data:application/pdf;base64," + nomina?.pdf}
 					type="application/pdf"
-					style={{ border: 'none' }}
+					style={{ border: 'none', margin: 'none', padding: 'none' }}
 				/>
 			</DialogContent>
 		</Dialog>
