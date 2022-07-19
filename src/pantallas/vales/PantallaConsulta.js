@@ -155,7 +155,7 @@ export default function PantallaConsulta() {
 			<Typography sx={{ ml: 2, mt: 1 }} variant="h5" component="div">Consultando vales</Typography>
 		</Box>
 	} else if (error) {
-		contenido = <Alert severity="error">
+		contenido = <Alert severity="error" >
 			<AlertTitle>Ocurrió un error al realizar la consulta</AlertTitle>
 			{SAP.err2text(error)}
 		</Alert>
@@ -166,7 +166,7 @@ export default function PantallaConsulta() {
 			})}
 		</Stack>
 	} else {
-		contenido = <Box sx={{ m: 'auto', width: '400px', textAlign: 'center' }}>
+		contenido = <Box sx={{ m: 'auto', textAlign: 'center' }}>
 			<div><SentimentNeutralIcon sx={{ width: '60px', height: '60px', color: 'secondary.light' }} /></div>
 			<Typography sx={{ ml: 2, mt: 1 }} variant="h5" component="div">Sin resultados</Typography>
 		</Box>
