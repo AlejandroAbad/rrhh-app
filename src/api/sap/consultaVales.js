@@ -24,11 +24,14 @@ export const consultaVales = async (redux, abortController, mes, ano) => {
 			throw json;
 		}
 
+
 		return json.map(e => {
+			let fechaCreacion = parse(`${e.order_dat} ${e.order_tim}`, 'yyyy-MM-dd HH:mm:ss', new Date());
 			return {
 				numeroPedido: e.order,
 				numeroAlbaran: e.oproforma,
-				fechaCreacion: format(parse(`${e.order_dat} ${e.order_tim}`, 'yyyy-MM-dd HH:mm:ss', new Date()), 'dd MMMM yyyy HH:mm', {locale: es}),
+				fechaHoraCreacion: format(fechaCreacion, 'dd MMMM yyyy HH:mm', { locale: es }),
+				fechaCreacion: format(fechaCreacion, 'dd MMMM yyyy', { locale: es }),
 				precio: Math.max(e.amount_or, e.amount_ne),
 				unidades: e.unidades,
 				lineas: e.lineas

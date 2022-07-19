@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { Alert, Box, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, Grid, IconButton, InputLabel, LinearProgress, MenuItem, Paper, Select, Stack, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, LinearProgress, MenuItem, Paper, Select, Stack, Typography, useMediaQuery } from "@mui/material";
 import SentimentNeutralIcon from '@mui/icons-material/SentimentNeutral';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SearchIcon from '@mui/icons-material/Search';
@@ -8,7 +8,9 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { consultarVales } from 'redux/api/valesSlice';
-import { completarDescargaAlbaranPdf, descargarAlbaranPdf, preparaDescargaAlbaranPdf } from 'redux/api/albaranPdfSlice';
+import { completarDescargaAlbaranPdf, descargarAlbaranPdf, descartarErroresAlbaranPdf, preparaDescargaAlbaranPdf } from 'redux/api/albaranPdfSlice';
+import { useTheme } from '@emotion/react';
+import SAP from 'api/sap';
 
 
 
@@ -24,7 +26,6 @@ const LineaVale = ({ /*numeroPedido, */numeroAlbaran, fechaCreacion, precio, uni
 	const refDescargaPdf = React.useRef();
 	const albaranes = useSelector(state => state.albaranPdf.descargas);
 	const albaran = albaranes[numeroAlbaran];
-
 	const lanzarDescarga = React.useCallback(async () => {
 		const base64Response = await fetch(`data:application/pdf;base64,${albaran.pdf}`);
 		const blob = await base64Response.blob();
@@ -49,48 +50,64 @@ const LineaVale = ({ /*numeroPedido, */numeroAlbaran, fechaCreacion, precio, uni
 		dispatch(preparaDescargaAlbaranPdf({ numeroAlbaran, modoVisualizacion }));
 		dispatch(descargarAlbaranPdf({ numeroAlbaran, modoVisualizacion }));
 	}, [dispatch, albaran, numeroAlbaran, lanzarDescarga, lanzarVisualizacion]);
+
+	const fnLimpiarErrorDescarta = React.useCallback(() => {
+		dispatch(descartarErroresAlbaranPdf(numeroAlbaran));
+	}, [dispatch, numeroAlbaran])
+
 	React.useEffect(() => {
 		if (albaran?.estado === "completado" && albaran.pdf) {
 			if (albaran.modoVisualizacion === 'descarga') lanzarDescarga();
 			else if (albaran.modoVisualizacion === 'visualizar') lanzarVisualizacion();
 		}
-	}, [albaran, lanzarDescarga, lanzarVisualizacion])
+		else if (albaran?.estado === "error" && albaran?.modoVisualizacion !== "completado") {
+			dispatch(completarDescargaAlbaranPdf(numeroAlbaran));
+		}
+	}, [dispatch, albaran, numeroAlbaran, lanzarDescarga, lanzarVisualizacion])
+
 
 	return <Paper sx={{ p: 1, mb: 1, fontSize: '110%' }} square >
 		<a ref={refDescargaPdf} href="/" style={{ display: 'none' }}>as</a>
-		<Grid container>
-			<Grid item xs="auto" sx={{ ml: 2, mr: 4, pl: 1, minWidth: '90px' }}>
-				{albaran?.estado === 'cargando' ? <><LinearProgress sx={{ mt: 2.3, mb: 2.2 }} /></> : <>
-					<IconButton color="secondary" onClick={() => fnDescargarAlbaran('descarga')} disabled={albaran?.estado === 'cargando'}>
+
+		<Box sx={{ display: { xs: 'flex', sm: 'inline-flex' }, alignItems: { xs: 'stretch', sm: 'center' }, flexDirection: { xs: 'column', sm: 'row' } }}>
+			<Box sx={{ display: { xs: 'none', sm: 'inline' } }}>
+				{albaran?.estado === 'cargando' ? <><LinearProgress sx={{ mt: 2.3, mb: 2.2, width: '88px' }} /></> : <>
+					<IconButton sx={{ ml: 1 }} color="secondary" onClick={() => fnDescargarAlbaran('descarga')} disabled={albaran?.estado === 'cargando'}>
 						<PictureAsPdfIcon />
 					</IconButton>
 					<IconButton color="secondary" onClick={() => fnDescargarAlbaran('visualizar')} disabled={albaran?.estado === 'cargando'}>
 						<SearchIcon />
 					</IconButton>
-				</>
-				}
-			</Grid>
-			<Grid item xs="auto" sx={{ mr: 6, display: 'flex', alignItems: 'center' }}>
-				<Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{numeroAlbaran}</Typography>
-			</Grid>
-			<Grid item xs="auto" sx={{ mr: 6, display: 'flex', alignItems: 'center' }}>
-				<Typography variant="subtitle1">{fechaCreacion}</Typography>
-			</Grid>
-			<Grid item xs="auto" sx={{ mr: 1, display: 'flex', alignItems: 'center' }}>
-				<Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>{precio} €</Typography>
-			</Grid>
-			<Grid item xs="auto" sx={{ display: 'flex', alignItems: 'center' }}>
-				<Typography variant="subtitle1" sx={{ color: 'text.disabled' }}>
+				</>}
+			</Box>
+			<Box sx={{ display: { xs: 'block', sm: 'inline-flex' }, py: { xs: 2, sm: 0 }, mx: { xs: 0, sm: 1 } }} >
+				<Typography variant="body1" component="span" sx={{ fontWeight: 'bold', ml: 2 }}>{fechaCreacion}</Typography>
+				<Typography variant="body1" component="span" sx={{ ml: 3 }}>{numeroAlbaran}</Typography>
+				<Typography variant="body1" component="span" sx={{ fontWeight: 'bold', ml: 3 }}>{precio} €</Typography>
+				<Typography variant="body1" component="span" sx={{ color: 'text.disabled', display: { xs: 'none', md: 'inline' }, ml: 3 }}>
 					({unidades} unidad{unidades !== 1 && 'es'} en {lineas} línea{ }{lineas !== 1 && 's'})
 				</Typography>
-			</Grid>
 
+			</Box>
+			<Box sx={{ display: { xs: 'flex', sm: 'none' }, justifyContent: 'flex-end' }}>
+				{albaran?.estado === 'cargando' && <><CircularProgress size={20} sx={{ mt: 1, mr: 1.4 }} /></>}
+				<Button sx={{ ml: 1 }} color="secondary" onClick={() => fnDescargarAlbaran('descarga')} disabled={albaran?.estado === 'cargando'} >
+					Descargar
+				</Button>
+				<Button sx={{ ml: 1, px: 2 }} color="secondary" onClick={() => fnDescargarAlbaran('visualizar')} disabled={albaran?.estado === 'cargando'}>
+					Visualizar
+				</Button>
+			</Box>
+		</Box>
 
-			{albaran?.error && <Grid item xs={1}><Alert seveirty="error">{JSON.stringify(albaran.error)}</Alert></Grid>}
-
-
-		</Grid>
-
+		{albaran?.error &&
+			<Box sx={{ m: 1 }}>
+				<Alert severity='error' sx={{ py: 0 }} onClose={fnLimpiarErrorDescarta}>
+					<AlertTitle>Error en la descarga</AlertTitle>
+					{SAP.err2text(albaran?.error)}
+				</Alert>
+			</Box>
+		}
 	</Paper>
 }
 
@@ -126,6 +143,9 @@ export default function PantallaConsulta() {
 	const error = useSelector(state => state.vales.error);
 
 	const [visualizarAlbaran, setVisualizarAlbaran] = React.useState(null);
+	const theme = useTheme();
+	const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
 
 	let contenido = null;
 
@@ -135,7 +155,10 @@ export default function PantallaConsulta() {
 			<Typography sx={{ ml: 2, mt: 1 }} variant="h5" component="div">Consultando vales</Typography>
 		</Box>
 	} else if (error) {
-		contenido = <Alert severity="error">JSON.stringify(error)</Alert>;
+		contenido = <Alert severity="error">
+			<AlertTitle>Ocurrió un error al realizar la consulta</AlertTitle>
+			{SAP.err2text(error)}
+		</Alert>
 	} else if (vales?.length > 0) {
 		contenido = <Stack sx={{ mt: 2 }}>
 			{vales.map(vale => {
@@ -187,35 +210,23 @@ export default function PantallaConsulta() {
 
 		{contenido}
 
-		<Dialog
-			fullWidth
-			maxWidth="lg"
-			open={Boolean(visualizarAlbaran?.pdf)}
-			onClose={() => setVisualizarAlbaran(null)}
-		>
-			<DialogTitle sx={{ m: 0, mb: 1, p: 2, py: 1, bgcolor: 'primary.main', color: 'primary.contrastText', }} >
-				Vale de empleado: Albarán número {visualizarAlbaran?.numeroAlbaran}
+		<Dialog fullScreen={fullScreen} fullWidth maxWidth="lg" open={Boolean(visualizarAlbaran)} onClose={() => setVisualizarAlbaran(false)}		>
+			<DialogTitle sx={{ m: 0, mb: 0, py: 1, bgcolor: 'primary.main', color: 'primary.contrastText' }} >
+				Vale de empleado: Albarán {visualizarAlbaran?.numeroAlbaran}
 				<IconButton
 					onClick={() => setVisualizarAlbaran(null)}
-					sx={{
-						position: 'absolute',
-						right: 8,
-						top: 4,
-						color: (theme) => theme.palette.grey[800],
-					}}
+					sx={{ position: 'absolute', right: 8, top: 4, color: (theme) => theme.palette.grey[800] }}
 				>
 					<CloseIcon />
 				</IconButton>
-
 			</DialogTitle>
-			<DialogContent>
+			<DialogContent sx={{ p: 0 }}>
 				<iframe
-					height="800px"
+					height="760px"
 					width="100%"
-					title={`Vale de empleado: Albarán número ${visualizarAlbaran?.numeroAlbaran}`}
+					title={`Vale de empleado: Albarán ${visualizarAlbaran?.numeroAlbaran}`}
 					src={"data:application/pdf;base64," + visualizarAlbaran?.pdf}
 					type="application/pdf"
-
 					style={{ border: 'none' }}
 				/>
 			</DialogContent>

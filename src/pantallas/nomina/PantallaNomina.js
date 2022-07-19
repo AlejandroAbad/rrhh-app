@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, Typography, useMediaQuery } from "@mui/material";
+import { Alert, AlertTitle, Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, MenuItem, Select, Typography, useMediaQuery } from "@mui/material";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from 'react-redux';
 import { completarDescargaNominaPdf, descargarNominaPdf } from 'redux/api/nominaPdfSlice';
 import { useTheme } from '@emotion/react';
+import SAP from 'api/sap';
 
 
 
@@ -60,13 +61,14 @@ export default function PantallaNomina() {
 		setVisualizarNomina(true);
 		dispatch(completarDescargaNominaPdf());
 	}, [dispatch])
-	React.useEffect(() => {
-		if (!nomina && nomina.pdf) return;
 
-		if (nomina.modoVisualizacion === 'descargar') {
-			lanzarDescargaPdf();
-		} else if (nomina.modoVisualizacion === 'visualizar') {
-			lanzarVisualizacion()
+	React.useEffect(() => {
+		if (nomina?.pdf) {
+			if (nomina.modoVisualizacion === 'descargar') {
+				lanzarDescargaPdf();
+			} else if (nomina.modoVisualizacion === 'visualizar') {
+				lanzarVisualizacion()
+			}
 		}
 	}, [nomina, lanzarDescargaPdf, lanzarVisualizacion])
 
@@ -80,12 +82,16 @@ export default function PantallaNomina() {
 			<Typography sx={{ ml: 2, mt: 1 }} variant="h5" component="div">Descargando nómina</Typography>
 		</Box>
 	} else if (nomina.error) {
-		contenido = JSON.stringify(nomina.error);
+		contenido = <Alert severity="error" sx={{ mt: 4 }}>
+			<AlertTitle>Error al obtener la nómina</AlertTitle>
+			{SAP.err2text(nomina.error)}
+		</Alert>
+
 	}
 
 	return <>
 		<a ref={refDescargaPdf} href="/" style={{ display: 'none' }}>as</a>
-		<Box sx={{ m: 'auto' }}>
+		<Box sx={{}}>
 			<Typography variant="h4" sx={{ m: 'auto', mb: 2 }}>Mis nóminas</Typography>
 			<Typography>
 				A través de esta herramienta podrás descargarte tus recibos de nómina. Esta utilidad se alinea con el compromiso de la empresa por el respeto al medio ambiente y a la utilización razonable del papel.

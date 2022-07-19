@@ -31,7 +31,11 @@ export const descargaAlbaranPdfSlice = createSlice({
 		},
 		completarDescargaAlbaranPdf: (state, action) => {
 			state.descargas[action.payload].modoVisualizacion = 'completado'
-		}
+		},
+		descartarErroresAlbaranPdf: (state, action) => {
+			state.descargas[action.payload].estado = 'inicial';
+			state.descargas[action.payload].error = null;
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -68,5 +72,5 @@ export const descargaAlbaranPdfSlice = createSlice({
 
 
 
-export const { preparaDescargaAlbaranPdf, completarDescargaAlbaranPdf } = descargaAlbaranPdfSlice.actions;
+export const { preparaDescargaAlbaranPdf, completarDescargaAlbaranPdf, descartarErroresAlbaranPdf } = descargaAlbaranPdfSlice.actions;
 export default descargaAlbaranPdfSlice.reducer;

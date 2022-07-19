@@ -40,7 +40,7 @@ function App() {
 				<BarraSuperior onMenuLateralClick={fnMostrarDrawerLateral} />
 
 				<Container fixed disableGutters sx={{ mt: { xs: 6, sm: 8 } }}>
-					<Paper elevation={2} sx={{ pt: 4, pb: 6, px: {xs: 3, sm: 6, md: 12 } }}>
+					<Paper elevation={2} sx={{ pt: { xs: 4, sm: 6 }, pb: { xs: 6, sm: 10 }, px: { xs: 3, sm: 6, md: 12 } }}>
 						{(!usuario?.jwt) ?
 							<Pantallas.Login /> :
 							<Routes >
