@@ -1,14 +1,12 @@
 import React from 'react';
 
 // MUI
-import Box  from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 
 // ICONOS
 import InfoIcon from '@mui/icons-material/Info';
@@ -22,21 +20,26 @@ export default function DialogoAcercaDe({ abierto, fnAbrirDialogoApi, fnCerrarDi
 			<InfoIcon />
 		</IconButton>
 		<Dialog open={abierto} onClose={fnCerrarDialogoApi} fullWidth>
-			<DialogTitle>Fedicom 3</DialogTitle>
 			<DialogContent>
-				<Box>
-					<Typography variant="caption" component="div">
-						Versión del interfaz web: <strong>v2.0.1</strong>
-					</Typography>
-					<Typography variant="caption" component="div">
-						Fecha de compilación: <strong>{preval`module.exports = new Date().toLocaleString('es-ES');`}</strong>
-					</Typography>
-				</Box>
+				<Typography variant="h5" component="div">
+					App del Emplead@
+				</Typography>
+				<Typography variant="body1" component="div">
+					Grupo HEFAME &copy; 2022
+				</Typography>
+
+				<Typography variant="body1" component="div" sx={{mt: 2}}>
+					Versión del interfaz web: <strong>v2.0.1</strong>
+				</Typography>
+				<Typography variant="body1" component="div">
+					Fecha de compilación: <strong>{preval`module.exports = new Date().toLocaleString('es-ES');`}</strong>
+				</Typography>
+
 
 
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={fnCerrarDialogoApi}>Cancelar</Button>
+				<Button variant="contained" onClick={fnCerrarDialogoApi}>Cerrar</Button>
 			</DialogActions>
 		</Dialog>
 	</>

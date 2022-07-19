@@ -28,7 +28,7 @@ const BarraSuperior = ({ onMenuLateralClick }) => {
 
 	const [anclaje, setAnclaje] = React.useState(null);
 	const fnAbrirMenuUsuario = React.useCallback((e) => setAnclaje(e.currentTarget), [setAnclaje]);
-	const fnCerrarMenuUsuario = React.useCallback((e) => setAnclaje(null), [setAnclaje]);
+	const fnCerrarMenuUsuario = React.useCallback(() => setAnclaje(null), [setAnclaje]);
 
 	const [dialogoAcercaDeAbierto, _setDialogoAcercaDeAbierto] = React.useState(false);
 	const fnAbrirDialogoAcercaDe = React.useCallback(() => _setDialogoAcercaDeAbierto(true), [_setDialogoAcercaDeAbierto]);

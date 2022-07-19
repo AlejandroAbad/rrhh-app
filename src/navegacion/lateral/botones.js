@@ -17,48 +17,25 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 
 const botones = [
 
-	{ texto: "Dashboard", icono: Dashboard, link: '/' },
+	{ texto: "Inicio", icono: Dashboard, link: '/' },
 
-	{ texto: "transmisiones", esTitulo: true },
-	{ texto: "Pedidos", icono: LocalGroceryStoreIcon, link: '/transmisiones/pedidos' },
-	{ texto: "Devoluciones", icono: KeyboardReturnIcon, link: '/transmisiones/devoluciones' },
-	{ texto: "Logística", icono: LocalShippingIcon, link: '/transmisiones/logistica' },
-	{ texto: "Albaranes", icono: ReceiptLongIcon, link: '/transmisiones/consultas' },
-
-	{ texto: "Transmisiones", icono: NearMe, link: '/transmisiones' },
-
-
-
-
-	{ texto: "monitorización", esTitulo: true },
-	{ texto: "Base de datos", icono: Storage, link: '/monitor/mongodb' },
-	{ texto: "Instancias", icono: Speed, link: '/monitor/instancias' },
+	{ texto: "personal", esTitulo: true },
+	{ texto: "Mis nóminas", icono: LocalGroceryStoreIcon, link: '/nomina' },
 	{
-		texto: "Balanceo de carga", icono: CallSplit, subMenu: [
-			{ texto: "Entrada pedidos", icono: Input, link: '/balanceadores/fedicom3' },
-			{ texto: "Servidores SAP", icono: Storage, link: '/balanceadores/sap' },
+		texto: "Vales de empleado", icono: CallSplit, subMenu: [
+			{ texto: "Crear vale", icono: Input, link: '/vales/catalogo' },
+			{ texto: "Consultar", icono: Storage, link: '/vales/consulta' },
 		]
-	},
-
-
-	{ texto: "Herramientas", esTitulo: true },
+	},	
 	{
-		texto: "Simuladores", icono: NearMe, subMenu: [
-			{ texto: "Pedidos", icono: LocalGroceryStoreIcon, link: '/herramientas/simuladores/pedidos' },
-			{ texto: "Devoluciones", icono: KeyboardReturnIcon, link: '/herramientas/simuladores/devoluciones' },
-			{ texto: "Logística", icono: LocalShippingIcon, link: '/herramientas/simuladores/logistica' },
-			{ texto: "Albaranes", icono: ReceiptLongIcon, link: '/herramientas/simuladores/albaranes' },
-			{ texto: "Test de stress", icono: Security, link: '/herramientas/simuladores/stress' },
+		texto: "IRPF", icono: CallSplit, subMenu: [
+			{ texto: "Situación", icono: Input, link: '/irpf/situacion' },
+			{ texto: "Modelo 145", icono: Input, link: '/irpf/mod145' },
+			{ texto: "Incremento Voluntario", icono: Storage, link: '/irpf/incremento' },
+			{ texto: "Certificado de Retenciones", icono: Storage, link: '/irpf/incremento' },
 		]
-	},
-	{
-		texto: "Informes", icono: AssessmentIcon, subMenu: [
-			{ texto: "Pedidos por almacén", icono: Business, link: '/' },
-			{ texto: "Pedidos por servidor SAP", icono: Storage, link: '/' },
-		]
-	},
-	{ texto: "Gestión de tokens", icono: VpnKey, link: '/herramientas/tokens' },
-	// { texto: "Visor de tramas Fedicom2", icono: Translate, link: '/utilidades/visorTramasFedicom2' },
+	},	
+	
 
 
 ]
