@@ -215,7 +215,7 @@ export default function PantallaConsulta() {
 				Vale de empleado: Albarán {visualizarAlbaran?.numeroAlbaran}
 				<IconButton
 					onClick={() => setVisualizarAlbaran(null)}
-					sx={{ position: 'absolute', right: 8, top: 4, color: (theme) => theme.palette.grey[800] }}
+					sx={{ position: 'absolute', right: 8, top: 4, color: (t) => t.palette.grey[800] }}
 				>
 					<CloseIcon />
 				</IconButton>

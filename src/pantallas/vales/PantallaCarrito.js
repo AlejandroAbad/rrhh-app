@@ -9,10 +9,10 @@ import BrokenImageIcon from '@mui/icons-material/BrokenImage';
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { limpiarEstadoCreacionPedido, realizarCompra, reiniciarEstadoCarrito, setMaterialEnCarrito } from "redux/api/carritoSlice";
+import { limpiarCarrito, limpiarEstadoCreacionPedido, realizarCompra, setMaterialEnCarrito } from "redux/api/carritoSlice";
 
 
-const LineaArticulo = ({ codigo, nombre, descripcion, stock, precio, imagen, cantidad }) => {
+const LineaArticulo = ({ codigo, nombre, descripcion, stock, precio, imagen, cantidad, bloqueado }) => {
 
 	const dispatch = useDispatch();
 	const refCantidad = React.useRef(cantidad);
@@ -100,8 +100,9 @@ const LineaArticulo = ({ codigo, nombre, descripcion, stock, precio, imagen, can
 					size="small"
 					sx={{ width: '8ch' }}
 					InputLabelProps={{ shrink: true }}
+					disabled={bloqueado}
 				/>
-				<IconButton onClick={fnEliminarCarrito}>
+				<IconButton onClick={fnEliminarCarrito} disabled={bloqueado}>
 					<DeleteIcon />
 				</IconButton>
 			</Box>
@@ -113,17 +114,15 @@ export default function PantallaCarrito() {
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	let fnIrCatalogo = React.useCallback((opciones = {}) => {
-		let { limpiarCarrito } = opciones;
-		if (limpiarCarrito) dispatch(reiniciarEstadoCarrito())
+	const fnIrCatalogo = React.useCallback(() => {
 		navigate('/vales/catalogo', { replace: true })
-	}, [dispatch, navigate]);
+	}, [navigate]);
 
 	const contenidoCarrito = useSelector(state => state.carrito.materiales);
 	const estadoCreacionPedido = useSelector(state => state.carrito.estado);
 	const errorCreacionPedido = useSelector(state => state.carrito.error);
 	const resultadoCreacionPedido = useSelector(state => state.carrito.resultado);
-
+	
 	const resumenCarrito = React.useMemo(() => {
 		if (!contenidoCarrito?.length) return {
 			materiales: 'Carrito vacio',
@@ -132,10 +131,14 @@ export default function PantallaCarrito() {
 		let clon = [...contenidoCarrito];
 		clon.sort((a, b) => parseInt(a.codigo) - parseInt(b.codigo));
 		return {
-			materiales: clon.map(material => <LineaArticulo key={material.codigo} {...material} />),
+			materiales: clon.map(material => <LineaArticulo key={material.codigo} {...material} bloqueado={estadoCreacionPedido === 'cargando'} />),
 			total: clon.reduce((v, m) => v + m.precio * m.cantidad, 0).toFixed(2)
 		}
-	}, [contenidoCarrito])
+	}, [contenidoCarrito, estadoCreacionPedido])
+
+	const fnLimpiarCarrito = React.useCallback( () => {
+		dispatch(limpiarCarrito());
+	}, [dispatch])
 
 
 
@@ -160,7 +163,7 @@ export default function PantallaCarrito() {
 			<Button
 				variant="outlined"
 				color="secondary"
-				onClick={() => fnIrCatalogo({ limpiarCarrito: true })}
+				onClick={fnIrCatalogo}
 				sx={{ mt: 6, mx: 'auto' }}
 				startIcon={<ArrowBackIcon />}
 			>
@@ -189,13 +192,11 @@ export default function PantallaCarrito() {
 
 	return (
 		<Box>
-			<Typography variant="h4" sx={{ m: 'auto', mb: 2 }}>Mis vales</Typography>
+			<Typography variant="h4" sx={{ m: 'auto', mb: 2 }}>Resumen del pedido</Typography>
 			<Grid container spacing={4} >
-				<Grid item xs={12} md={8} >
-					{resumenCarrito.materiales}
-				</Grid>
-				<Grid item xs={4} >
-					<Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 10 }}>
+
+				<Grid item xs={12} md={4}>
+					<Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
 						<Typography sx={{ fontSize: '140%' }}>
 							Precio total:
 						</Typography>
@@ -216,9 +217,20 @@ export default function PantallaCarrito() {
 					<Button
 						fullWidth
 						variant="outlined"
+						onClick={fnLimpiarCarrito}
+						color="error"
+						sx={{ mt: 2 }}
+						disabled={estadoCreacionPedido === 'cargando'}
+						startIcon={<ProductionQuantityLimitsIcon />}
+					>
+						Vaciar carrito
+					</Button>
+					<Button
+						fullWidth
+						variant="outlined"
 						onClick={fnIrCatalogo}
 						color="secondary"
-						sx={{ mt: 2 }}
+						sx={{ mt: 4 }}
 						disabled={estadoCreacionPedido === 'cargando'}
 						startIcon={<ArrowBackIcon />}
 					>
@@ -236,6 +248,9 @@ export default function PantallaCarrito() {
 							{errorCreacionPedido.map((error, i) => <div key={i}>• {error.descripcion} <small>[{error.codigo}]</small></div>)}
 						</Alert>
 					}
+				</Grid>
+				<Grid item xs={12} md={8} >
+					{resumenCarrito.materiales}
 				</Grid>
 			</Grid>
 		</Box>

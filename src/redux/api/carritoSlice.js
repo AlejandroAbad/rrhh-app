@@ -69,12 +69,6 @@ export const carritoSlice = createSlice({
 			state.resultado = null;
 			state.error = null;
 		},
-		reiniciarEstadoCarrito: (state, _) => {
-			state.materiales = [];
-			state.estado = 'inicial';
-			state.resultado = null;
-			state.error = null;
-		}
 	},
 	extraReducers: (builder) => {
 		builder
@@ -87,6 +81,7 @@ export const carritoSlice = createSlice({
 				state.resultado = action.payload;
 				state.estado = 'completado';
 				state.error = null;
+				state.materiales = [];
 			})
 			.addCase(realizarCompra.rejected, (state, action) => {
 				state.resultado = null;
@@ -98,5 +93,5 @@ export const carritoSlice = createSlice({
 
 
 
-export const { setMaterialEnCarrito, addMaterialEnCarrito, limpiarCarrito, limpiarEstadoCreacionPedido, reiniciarEstadoCarrito } = carritoSlice.actions;
+export const { setMaterialEnCarrito, addMaterialEnCarrito, limpiarCarrito, limpiarEstadoCreacionPedido } = carritoSlice.actions;
 export default carritoSlice.reducer;
