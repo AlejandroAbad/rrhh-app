@@ -4,6 +4,7 @@ import SendIcon from '@mui/icons-material/Send';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import BrokenImageIcon from '@mui/icons-material/BrokenImage';
 
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,29 +34,60 @@ const LineaArticulo = ({ codigo, nombre, descripcion, stock, precio, imagen, can
 			e.preventDetault();
 		}
 	}
+	const [sinImagen, setSinImagen] = React.useState(false);
 
+	return <Paper elevation={1} square sx={{ pt: 3, pb: 2, px: 0, mb: 1 }}	>
 
-	return <Paper elevation={3} square sx={{ height: 130, pt: 2, mb: 2 }}>
-		<Grid container sx={{ height: 130 }}>
-			<Grid item xs={2} sx={{ textAlign: 'center', verticalAlign: 'center' }}>
-				<img alt="" src={imagen} style={{ maxWidth: '100px', maxHeight: '100px' }} />
-			</Grid>
-			<Grid item xs={8}>
-				<Typography variant="caption" component="div">{codigo}</Typography>
-				<Typography variant="body1" component="div" sx={{ fontWeight: 'bold' }}>{nombre}</Typography>
-				<Box sx={{ display: 'flex', justifyContent: 'flex-start', alignContent: 'flex-end' }}>
-					<Typography variant="body2" sx={{ alignSelf: 'flex-end', fontSize: '110%' }}>{(cantidad * precio).toFixed(2)}€</Typography>
+		<Typography variant="body1" component="div" sx={{ fontWeight: 'bold', ml: 2 }}>
+			{nombre}
+		</Typography>
+		<Box sx={{ mt: 1, display: 'flex' }}>
+			<Box sx={{ width: '70px', height: '70px', display: 'flex', justifyContent: 'center', alignItems: 'center', ml: 2 }}>
+				{sinImagen ?
+					<BrokenImageIcon sx={{ width: '70px', height: '70px', color: t => t.palette.grey[200], mb: 3 }} />
+					:
+					<img alt="" src={imagen} style={{ maxWidth: '70px', maxHeight: '70px' }}
+						onError={() => setSinImagen(true)}
+					/>
+				}
+			</Box>
+			<Box sx={{ ml: 2 }}>
+				<Typography variant="caption">CN {codigo}</Typography>
+				<Typography variant="body2" sx={{ alignSelf: 'flex-end', fontSize: '110%' }}>
+					{(cantidad * precio).toFixed(2)}€
 					{cantidad > 1 &&
-						<Typography variant="body2" sx={{ color: 'text.disabled', alignSelf: 'flex-end', fontSize: '90%', ml: 2 }}>
-							{cantidad} unidad{cantidad !== 1 && 'es'} a {precio}€/ud`
+						<Typography variant="body2" component="span" sx={{ color: 'text.disabled', fontSize: '90%', ml: 1 }}>
+							{cantidad} ud{cantidad !== 1 && 's'} x {precio}€/ud
 						</Typography>
 					}
+				</Typography>
+
+				<Typography variant="body2" component="div" sx={{ color: stock ? 'text.disabled' : 'error.main' }}>
+					{stock ? `${stock} unidad${stock !== 1 && 'es'} en stock` : 'Fuera de stock'}
+				</Typography>
+
+				<Box sx={{ mt: 2, display: { sm: 'none' } }}>
+					<TextField
+						inputRef={refCantidad}
+						defaultValue={cantidad}
+						onChange={fnActualizarCarrito}
+						onBlur={fnControlOnBlur}
+						label="Cantidad"
+						type="number"
+						variant="outlined"
+						color="secondary"
+						size="small"
+						sx={{ width: '8ch' }}
+						InputLabelProps={{ shrink: true }}
+					/>
+					<IconButton onClick={fnEliminarCarrito}>
+						<DeleteIcon />
+					</IconButton>
 				</Box>
 
-				<Typography variant="body2" component="div" sx={{ clear: 'both', float: 'right', color: 'text.disabled', fontSize: '80%', mr: 2, mt: 2 }}>{stock} unidad{stock !== 1 && 'es'} en stock</Typography>
+			</Box>
 
-			</Grid>
-			<Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', pb: 4 }}>
+			<Box sx={{ mt: 2, mr: 3, ml: 'auto', display: { xs: 'none', sm: 'block' } }}>
 				<TextField
 					inputRef={refCantidad}
 					defaultValue={cantidad}
@@ -72,11 +104,8 @@ const LineaArticulo = ({ codigo, nombre, descripcion, stock, precio, imagen, can
 				<IconButton onClick={fnEliminarCarrito}>
 					<DeleteIcon />
 				</IconButton>
-
-
-
-			</Grid>
-		</Grid>
+			</Box>
+		</Box>
 	</Paper>
 }
 
@@ -141,9 +170,9 @@ export default function PantallaCarrito() {
 	}
 
 	if (!contenidoCarrito.length) {
-		return <Box sx={{ m: 'auto', mt: 4, width: '400px', textAlign: 'center' }}>
+		return <Box sx={{ mt: 4, display: 'flex', flexDirection: 'column' }}>
 			<ProductionQuantityLimitsIcon color="info" sx={{ mx: 'auto', width: '80px', height: '80px' }} />
-			<Typography sx={{ ml: 2, mt: 1, color: 'text.disabled', fontWeight: 'bold' }} variant="h5" component="div">
+			<Typography sx={{ mt: 1, mx: 'auto' }} variant="h5" component="div">
 				¡No tiene ningún artículo en el carrito!
 			</Typography>
 			<Button
@@ -159,60 +188,57 @@ export default function PantallaCarrito() {
 	}
 
 	return (
-		<Grid container spacing={4} sx={{ px: 4 }}>
-			<Grid item xs={8}>
-				<Typography variant="h4" sx={{ m: 'auto', my: 2 }}>Resumen del carrito</Typography>
-				{resumenCarrito.materiales}
-			</Grid>
-			<Grid item xs={4}>
-				<Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 10 }}>
-					<Typography sx={{ fontSize: '140%' }}>
-						Precio total:
-					</Typography>
-					<Typography sx={{ color: 'text.primary', fontWeight: 'bold', ml: 1, fontSize: '140%' }}>
-						{resumenCarrito.total}€
-					</Typography>
-				</Box>
-				<Button
-					fullWidth
-					variant="contained"
-					onClick={() => dispatch(realizarCompra())}
-					sx={{ mt: 2 }}
-					startIcon={<SendIcon />}
-					disabled={estadoCreacionPedido === 'cargando'}
-				>
-					Realizar pedido
-				</Button>
-				<Button
-					fullWidth
-					variant="outlined"
-					onClick={fnIrCatalogo}
-					color="secondary"
-					sx={{ mt: 2 }}
-					disabled={estadoCreacionPedido === 'cargando'}
-					startIcon={<ArrowBackIcon />}
-				>
-					Volver al catálogo
-				</Button>
-
-				{estadoCreacionPedido === 'cargando' &&
-					<Box sx={{ mt: 4, display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
-						<div><CircularProgress /></div>
-						<Typography sx={{ ml: 2, mt: 0.5 }} variant="h6" component="div">Creando pedido</Typography>
+		<Box>
+			<Typography variant="h4" sx={{ m: 'auto', mb: 2 }}>Mis vales</Typography>
+			<Grid container spacing={4} >
+				<Grid item xs={12} md={8} >
+					{resumenCarrito.materiales}
+				</Grid>
+				<Grid item xs={4} >
+					<Box sx={{ display: 'flex', justifyContent: 'flex-start', mt: 10 }}>
+						<Typography sx={{ fontSize: '140%' }}>
+							Precio total:
+						</Typography>
+						<Typography sx={{ color: 'text.primary', fontWeight: 'bold', ml: 1, fontSize: '140%' }}>
+							{resumenCarrito.total}€
+						</Typography>
 					</Box>
-				}
-
-				{errorCreacionPedido &&
-					<Alert severity="error" sx={{ mt: 4 }} onClose={() => dispatch(limpiarEstadoCreacionPedido())}>
-						<strong>Se ha producido un error:</strong>
-
-						{errorCreacionPedido.map((error, i) => <div key={i}>• {error.descripcion} <small>[{error.codigo}]</small></div>)}
-					</Alert>
-				}
-
+					<Button
+						fullWidth
+						variant="contained"
+						onClick={() => dispatch(realizarCompra())}
+						sx={{ mt: 2 }}
+						startIcon={<SendIcon />}
+						disabled={estadoCreacionPedido === 'cargando'}
+					>
+						Realizar pedido
+					</Button>
+					<Button
+						fullWidth
+						variant="outlined"
+						onClick={fnIrCatalogo}
+						color="secondary"
+						sx={{ mt: 2 }}
+						disabled={estadoCreacionPedido === 'cargando'}
+						startIcon={<ArrowBackIcon />}
+					>
+						Volver al catálogo
+					</Button>
+					{estadoCreacionPedido === 'cargando' &&
+						<Box sx={{ mt: 4, display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
+							<div><CircularProgress /></div>
+							<Typography sx={{ ml: 2, mt: 0.5 }} variant="h6" component="div">Creando pedido</Typography>
+						</Box>
+					}
+					{errorCreacionPedido &&
+						<Alert severity="error" sx={{ mt: 4 }} onClose={() => dispatch(limpiarEstadoCreacionPedido())}>
+							<strong>Se ha producido un error:</strong>
+							{errorCreacionPedido.map((error, i) => <div key={i}>• {error.descripcion} <small>[{error.codigo}]</small></div>)}
+						</Alert>
+					}
+				</Grid>
 			</Grid>
-
-		</Grid>
+		</Box>
 	)
 
 
