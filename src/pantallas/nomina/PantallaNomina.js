@@ -157,7 +157,7 @@ export default function PantallaNomina() {
 
 		<Dialog fullScreen={fullScreen} fullWidth maxWidth="lg" open={Boolean(visualizarNomina)} onClose={() => setVisualizarNomina(false)}		>
 			<DialogTitle sx={{ m: 0, mb: 0, py: 1, bgcolor: 'primary.main', color: 'primary.contrastText' }} >
-				Nómina de {MESES[fecha.mes]} de {fecha.ano}
+				Nómina: {MESES[fecha.mes].toLowerCase()} de {fecha.ano}
 				<IconButton onClick={() => setVisualizarNomina(false)} sx={{ position: 'absolute', right: 8, top: 4, color: th => th.palette.grey[800], }}				>
 					<CloseIcon />
 				</IconButton>
@@ -166,7 +166,7 @@ export default function PantallaNomina() {
 				<iframe
 					height="880px"
 					width="100%"
-					title={`Nómina de ${MESES[fecha.mes]} de ${fecha.ano}`}
+					title={`Nómina: ${MESES[fecha.mes].toLowerCase()} de ${fecha.ano}`}
 					src={"data:application/pdf;base64," + nomina?.pdf}
 					type="application/pdf"
 					style={{ border: 'none', margin: 'none', padding: 'none' }}
