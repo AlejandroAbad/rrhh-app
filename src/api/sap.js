@@ -1,4 +1,5 @@
 import { autenticar } from "./sap/autenticar";
+import { consultaAccesos } from "./sap/consultaAccesos";
 import { consultaCatalogo } from "./sap/consultaCatalogo";
 import { consultaVales } from "./sap/consultaVales";
 import { descargarAlbaranPdf } from "./sap/descargarAlbaranPdf";
@@ -11,6 +12,7 @@ const SAP = function (R, A) {
 		consultaVales: (mes, ano) => consultaVales(R, A, mes, ano),
 		descargarAlbaranPdf: (albaran) => descargarAlbaranPdf(R, A, albaran),
 		descargarNominaPdf: (mes, ano) => descargarNominaPdf(R, A, mes, ano),
+		consultaAccesos: (fecha) => consultaAccesos(R, A, fecha)
 	}
 }
 

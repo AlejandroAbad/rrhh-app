@@ -1,5 +1,5 @@
 
-export default async function llamadasSap (redux, abortController, metodo, url, body, cabeceras) {
+export default async function llamadasSap(redux, abortController, metodo, url, body, cabeceras) {
 
 	let urlFedicom = redux.getState().api.urlBase;
 	let jwt = redux.getState().api.usuario.datos.jwt;
@@ -29,9 +29,9 @@ export default async function llamadasSap (redux, abortController, metodo, url, 
 }
 
 
-export async function obtenerJson(respuesta) {
+export async function obtenerJson(respuesta, encoding = 'iso-8859-1') {
 	const buffer = await respuesta.arrayBuffer();
-	const decoder = new TextDecoder('iso-8859-1');
+	const decoder = new TextDecoder(encoding);
 	const texto = decoder.decode(buffer);
 	return JSON.parse(texto);
 }
