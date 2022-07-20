@@ -1,33 +1,40 @@
-import CallSplit from "@mui/icons-material/CallSplit";
-import Input from "@mui/icons-material/Input";
 import Dashboard from "@mui/icons-material/Dashboard";
-import Storage from "@mui/icons-material/Storage";
-import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
-
-
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import PercentIcon from '@mui/icons-material/Percent';
+import SavingsIcon from '@mui/icons-material/Savings';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 const botones = [
 
 	{ texto: "Inicio", icono: Dashboard, link: '/' },
 
 	{ texto: "personal", esTitulo: true },
-	{ texto: "Mis nóminas", icono: LocalGroceryStoreIcon, link: '/nomina' },
-	{ texto: "Anticipos", icono: LocalGroceryStoreIcon, link: '/anticipos' },
+	{ texto: "Mis nóminas", icono: PaymentsIcon, link: '/nomina' },
+	{ texto: "Anticipos", icono: SavingsIcon, link: '/anticipos' },
 	{
-		texto: "Vales de empleado", icono: CallSplit, subMenu: [
-			{ texto: "Crear vale", icono: Input, link: '/vales/catalogo' },
-			{ texto: "Consultar", icono: Storage, link: '/vales/consulta' },
+		texto: "Vales de empleado", icono: ShoppingBagIcon, subMenu: [
+			{ texto: "Crear vale", icono: AddShoppingCartIcon, link: '/vales/catalogo' },
+			{ texto: "Consultar", icono: ReceiptLongIcon, link: '/vales/consulta' },
 		]
 	},
 	{
-		texto: "IRPF", icono: CallSplit, subMenu: [
-			{ texto: "Situación", icono: Input, link: '/irpf/situacion' },
-			{ texto: "Modelo 145", icono: Input, link: '/irpf/mod145' },
-			{ texto: "Incremento Voluntario", icono: Storage, link: '/irpf/incremento' },
-			{ texto: "Certificado de Retenciones", icono: Storage, link: '/irpf/incremento' },
+		texto: "IRPF", icono: AccountBalanceIcon, subMenu: [
+			{ texto: "Situación", icono: AssignmentIndIcon, link: '/irpf/situacion' },
+			{ texto: "Incremento Voluntario", icono: PercentIcon, link: '/irpf/incremento' },
+			{ texto: "Certificado de Retenciones", icono: HistoryEduIcon, link: '/irpf/incremento' },
 		]
-	},	
-	{ texto: "Accesos", icono: LocalGroceryStoreIcon, link: '/accesos' },
+	},
+	{ texto: "Mis accesos", icono: FingerprintIcon, link: '/accesos' },
+
+	{ texto: "Empresa", esTitulo: true },
+	{ texto: "Soporte CPD", icono: SupportAgentIcon, link: '/tickets' },
 
 
 ]

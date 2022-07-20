@@ -26,8 +26,8 @@ export default function BotonDeMenuLateral({ texto, icono, link, onClick, subMen
 	}, [subMenu, menuAbierto, setMenuAbierto])
 
 	if (esTitulo) {
-		return <ListSubheader disableSticky sx={{ bgcolor: 'grey.50' }}>
-			<Typography variant="overline" sx={{ pb: 0, mb: 0, color: 'grey.900' }}>
+		return <ListSubheader disableSticky sx={{ bgcolor: 'primary.main' }}>
+			<Typography variant="overline" component="div" sx={{ pb: 0, mb: 0, py: 0.6, color: 'text.primary', fontSize: '110%', fontWeight: 'bold' }}>
 				{texto}
 			</Typography>
 		</ListSubheader>
@@ -75,8 +75,8 @@ export default function BotonDeMenuLateral({ texto, icono, link, onClick, subMen
 	return (
 		<Box>
 			<ListItem button {...propiedades} >
-				<ListItemIcon key={`drawer-boton-${texto}`} sx={{ minWidth: 0, px: 1.5 }}>
-					<Icon component={icono} fontSize="small" />
+				<ListItemIcon  sx={{ px: 1.5 }}>
+					<Icon component={icono} />
 				</ListItemIcon>
 				<ListItemText primary={texto} />
 				{subMenu && (menuAbierto ? <ExpandLessIcon /> : <ExpandMoreIcon />)}
