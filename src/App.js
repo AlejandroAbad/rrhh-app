@@ -48,6 +48,7 @@ function App() {
 								<Route path="/nomina" element={<Pantallas.Nomina />} />
 								<Route path="/accesos" element={<Pantallas.Accesos />} />
 								<Route path="/accesos/prueba" element={<Pantallas.AccesosPrueba />} />
+								<Route path="/tickets" element={<Pantallas.Tickets />} />
 								<Route path="/*" element={<Pantallas.Principal />} />
 							</Routes >
 

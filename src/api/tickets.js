@@ -1,9 +1,11 @@
 import { consultarTickets } from "./ticket/consultarTickets";
+import { crearTicket } from "./ticket/crearTicket";
 
 
 const TICKETS = function (R, A) {
 	return {
-		consultarTickets: (emails) => consultarTickets(R, A, emails)
+		consultarTickets: (emails) => consultarTickets(R, A, emails),
+		crearTicket: (ticket) => crearTicket(R, A, ticket)
 	}
 }
 

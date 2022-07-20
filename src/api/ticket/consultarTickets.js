@@ -7,13 +7,18 @@ export const consultarTickets = async (redux, abortController, emails) => {
 
 	let respuesta = await llamadaTicket(redux, abortController, 'get', url);
 	let json = await respuesta.json();
-	if (json.token) {
-		return {
-			jwt: json.token,
-			pernr: json.pernr,
-			kunnr: parseInt(json.kunnr),
-			werks: json.werks_ped
-		};
+	if (Array.isArray(json?.tickets)) {
+		return json.tickets.map(t => {
+			return {
+				id: t.number,
+				titulo: t.subject,
+				fechaCreacion: t.created,
+				fechaModificacion: t.updated,
+				estado: t.status,
+				email: t.email,
+				enlace: t.link
+			}
+		});
 	} else {
 		throw json;
 	}

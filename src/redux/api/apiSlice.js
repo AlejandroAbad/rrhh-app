@@ -23,6 +23,7 @@ export const apiSlice = createSlice({
 	initialState: {
 		urlBase: 'https://p01-ws.hefame.es',
 		urlFedicom: 'https://fedicom3-dev.hefame.es',
+		urlTicket: 'https://ticket.hefame.es',
 		jwtFedicom: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbXBsZWFkbyIsImF1ZCI6ImVtcGxlYWRvIiwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjEsInBlcm1hbmVudGUiOnRydWV9.ZRuw8c5uhQDpBRrJd4F__4uSSYnF4d50mUC-SsZAMOk",
 		usuario: {
 			estado: 'inicial',
@@ -34,7 +35,7 @@ export const apiSlice = createSlice({
 		setApiUrlBase: (state, action) => {
 			state.urlBase = action.payload;
 		},
-		logout: (state, action) => {
+		logout: (state, _) => {
 			state.usuario.datos.jwt = null;
 			state.usuario.datos.kunnr = null;
 			state.usuario.datos.pernr = null;

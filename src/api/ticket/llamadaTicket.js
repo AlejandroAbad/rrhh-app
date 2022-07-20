@@ -1,7 +1,7 @@
 
 export default async function llamadaTicket(redux, abortController, metodo, url, body, cabeceras) {
 
-	let urlBaseTicket = redux.getState().api.urlBase;
+	let urlBaseTicket = redux.getState().api.urlTicket;
 
 	if (!cabeceras) cabeceras = {}
 	let opciones = {
