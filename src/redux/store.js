@@ -12,7 +12,7 @@ import ticketsReducer from './api/ticketsSlice';
 
 
 const loadState = () => {
-//	localStorage.removeItem('state');
+	localStorage.removeItem('estadoAppEmp');
 	try {
 		const estadoSerializado = localStorage.getItem('estadoAppEmp');
 		if (estadoSerializado === null) return undefined;

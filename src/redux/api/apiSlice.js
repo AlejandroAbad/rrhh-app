@@ -27,7 +27,15 @@ export const apiSlice = createSlice({
 		jwtFedicom: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbXBsZWFkbyIsImF1ZCI6ImVtcGxlYWRvIiwiZXhwIjo5OTk5OTk5OTk5LCJpYXQiOjEsInBlcm1hbmVudGUiOnRydWV9.ZRuw8c5uhQDpBRrJd4F__4uSSYnF4d50mUC-SsZAMOk",
 		usuario: {
 			estado: 'inicial',
-			datos: { jwt: null, kunnr: null, pernr: null, werks: null, },
+			datos: {
+				jwt: null,
+				codigoPedidos: null,
+				codigo: null,
+				almacen: null,
+				nombre: null,
+				apellidos: null,
+				foto: null
+			},
 			error: null
 		}
 	},
@@ -37,9 +45,12 @@ export const apiSlice = createSlice({
 		},
 		logout: (state, _) => {
 			state.usuario.datos.jwt = null;
-			state.usuario.datos.kunnr = null;
-			state.usuario.datos.pernr = null;
-			state.usuario.datos.werks = null;
+			state.usuario.datos.codigoPedidos = null;
+			state.usuario.datos.codigo = null;
+			state.usuario.datos.almacen = null;
+			state.usuario.datos.nombre = null;
+			state.usuario.datos.apellidos = null;
+			state.usuario.datos.foto = null;
 			state.usuario.estado = 'inicial';
 			state.usuario.error = null;
 		}
@@ -48,25 +59,34 @@ export const apiSlice = createSlice({
 		builder
 			.addCase(solicitarToken.pending, (state) => {
 				state.usuario.datos.jwt = null;
-				state.usuario.datos.kunnr = null;
-				state.usuario.datos.pernr= null;
-				state.usuario.datos.werks= null;
+				state.usuario.datos.codigoPedidos = null;
+				state.usuario.datos.codigo = null;
+				state.usuario.datos.almacen = null;
+				state.usuario.datos.nombre = null;
+				state.usuario.datos.apellidos = null;
+				state.usuario.datos.foto = null;
 				state.usuario.estado = 'cargando';
 				state.usuario.error = null;
 			})
 			.addCase(solicitarToken.fulfilled, (state, action) => {
 				state.usuario.datos.jwt = action.payload.jwt;
-				state.usuario.datos.kunnr = action.payload.kunnr;
-				state.usuario.datos.pernr = action.payload.pernr;
-				state.usuario.datos.werks = action.payload.werks;
+				state.usuario.datos.codigoPedidos = action.payload.codigoPedidos;
+				state.usuario.datos.codigo = action.payload.codigo;
+				state.usuario.datos.almacen = action.payload.almacen;
+				state.usuario.datos.nombre = action.payload.nombre;
+				state.usuario.datos.apellidos = action.payload.apellidos;
+				state.usuario.datos.foto = action.payload.foto;
 				state.usuario.estado = 'completado';
 				state.usuario.error = null;
 			})
 			.addCase(solicitarToken.rejected, (state, action) => {
 				state.usuario.datos.jwt = null;
-				state.usuario.datos.kunnr = null;
-				state.usuario.datos.pernr = null;
-				state.usuario.datos.werks = null;
+				state.usuario.datos.codigoPedidos = null;
+				state.usuario.datos.codigo = null;
+				state.usuario.datos.almacen = null;
+				state.usuario.datos.nombre = null;
+				state.usuario.datos.apellidos = null;
+				state.usuario.datos.foto = null;
 				state.usuario.estado = 'error';
 				state.usuario.error = action.payload;
 			});

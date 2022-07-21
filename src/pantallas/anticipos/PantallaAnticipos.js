@@ -13,11 +13,11 @@ const BoxAnticipo = ({ nombre, disponible, pendienteAprobar, concedido }) => {
 	let i = 0;
 	if (disponible) datosQuesito.push({ key: i++, title: 'Disponible', value: disponible, color: '#baffab' })
 	if (pendienteAprobar) datosQuesito.push({ key: i++, title: 'Pendiente', value: pendienteAprobar, color: '#facaa2' })
-	if (concedido) datosQuesito.push({ key: i++, title: 'Concedido', value: concedido, color: '#e6e6e6' })
+	if (concedido) datosQuesito.push({ key: i, title: 'Concedido', value: concedido, color: '#e6e6e6' })
 
 	let hayDatos = true;
 	if (datosQuesito.length === 0) {
-		datosQuesito.push({ key: i++, title: 'No disponible', value: 100, color: '#f2f2f2' })
+		datosQuesito.push({ key: i, title: 'No disponible', value: 100, color: '#f2f2f2' })
 		hayDatos = false;
 	}
 
@@ -27,7 +27,7 @@ const BoxAnticipo = ({ nombre, disponible, pendienteAprobar, concedido }) => {
 			{nombre}
 		</Typography>
 
-		<Box sx={{ mx: { xs: 'auto', sm: 4 }, my: 2, maxWidth: 200, display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+		<Box sx={{ mx: { xs: 'auto', sm: 4 }, my: 2, maxWidth: { xs: 120, sm: 200 }, display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
 			<PieChart data={datosQuesito} lineWidth={hayDatos ? 50 : 25} animate
 				label={({ x, y, dx, dy, dataEntry }) => (
 					<text
@@ -227,7 +227,7 @@ export default function PantallaAnticipos() {
 
 		<Typography variant="h5" sx={{ my: 2 }} component="div">Anticipos sobre pagas</Typography>
 
-		<Masonry columns={{ xs: 1, sm: 2, md: 3, lg: 4 }} spacing={2}>
+		<Masonry columns={{ xs: 2, md: 3, lg: 4 }} spacing={2}>
 			<BoxAnticipo {...{ nombre: 'Extra de Verano', disponible: 180.24, pendienteAprobar: 0, concedido: 0 }} />
 			<BoxAnticipo {...{ nombre: 'Extra de Navidad', disponible: 921.68, pendienteAprobar: 100, concedido: 0 }} />
 			<BoxAnticipo {...{ nombre: 'Extra de Beneficios', disponible: 1075.29, pendienteAprobar: 200, concedido: 40 }} />

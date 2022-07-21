@@ -67,7 +67,7 @@ const DialogoDetalleArticulo = () => {
 	const refTimeout = React.useRef(null);
 	const refCantidad = React.useRef(1);
 	const materialSeleccionado = useSelector(state => state.catalogo.materialSeleccionado);
-	const almacenSuministro = useSelector(state => state.api.usuario.datos.werks);
+	const almacenSuministro = useSelector(state => state.api.usuario.datos.almacen);
 	React.useEffect(() => {
 		setMostrarOk(0);
 		setErrorImagen(false);

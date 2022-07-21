@@ -5,7 +5,7 @@ import llamadaSap, { obtenerJson } from "./llamadaSap";
 
 export const consultaVales = async (redux, abortController, mes, ano) => {
 
-	let empleado = '00' + redux.getState().api.usuario.datos.pernr;
+	let empleado = '00' + redux.getState().api.usuario.datos.codigo;
 	mes = '00' + (mes + 1);
 	mes = mes.substring(mes.length - 2)
 

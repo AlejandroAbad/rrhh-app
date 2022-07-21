@@ -14,13 +14,21 @@ export const autenticar = async (redux, abortController, usuario, password) => {
 	let respuesta = await llamadaSap(redux, abortController, 'post', '/api/zhr_login_api/', body, headers);
 
 	let json = await obtenerJson(respuesta);
-	
+
 	if (json.token) {
+		json.name = json.name.toLowerCase();
+		if (json.name.endsWith('primitiv')) json.name = json.name.substring(0, json.name.length - 8)
+
+
+
 		return {
 			jwt: json.token,
-			pernr: json.pernr,
-			kunnr: parseInt(json.kunnr),
-			werks: json.werks_ped
+			codigo: json.pernr,
+			codigoPedidos: parseInt(json.kunnr),
+			almacen: json.werks_ped,
+			nombre: json.name.split(',')[1].trim(),
+			apellidos: json.name.split(',')[0].trim(),
+			foto: json.foto
 		};
 	} else {
 		throw json;

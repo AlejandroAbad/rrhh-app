@@ -9,9 +9,9 @@ export const realizarCompra = createAsyncThunk('carrito/realizarCompra',
 		let empleado = redux.getState().api.usuario.datos;
 
 		let pedido = {
-			codigoCliente: String(empleado.kunnr),
+			codigoCliente: String(empleado.codigoPedidos),
 			numeroPedidoOrigen: String((Math.random() * 10000).toFixed(0) + (Math.random() * 10000).toFixed(0)),
-			codigoAlmacenServicio: empleado.werks,
+			codigoAlmacenServicio: empleado.almacen,
 			lineas: materiales.map((mat, i) => {
 				return {
 					orden: i,

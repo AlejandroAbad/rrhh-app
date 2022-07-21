@@ -7,14 +7,17 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
 // ICONOS
+import Badge from '@mui/material/Badge';
 import MenuIcon from '@mui/icons-material/Menu';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 // REDUX
 import { useSelector } from 'react-redux';
 
 // SUBCOMPONENTES
-import DialogoAcercaDe from './DialogoAcercaDe';
+// import DialogoAcercaDe from './DialogoAcercaDe';
 import MenuUsuario from './MenuUsuario';
+
 
 
 
@@ -30,9 +33,9 @@ const BarraSuperior = ({ onMenuLateralClick }) => {
 	const fnAbrirMenuUsuario = React.useCallback((e) => setAnclaje(e.currentTarget), [setAnclaje]);
 	const fnCerrarMenuUsuario = React.useCallback(() => setAnclaje(null), [setAnclaje]);
 
-	const [dialogoAcercaDeAbierto, _setDialogoAcercaDeAbierto] = React.useState(false);
-	const fnAbrirDialogoAcercaDe = React.useCallback(() => _setDialogoAcercaDeAbierto(true), [_setDialogoAcercaDeAbierto]);
-	const fnCerrarDialogoAcercaDe = React.useCallback(() => _setDialogoAcercaDeAbierto(false), [_setDialogoAcercaDeAbierto]);
+	//const [dialogoAcercaDeAbierto, _setDialogoAcercaDeAbierto] = React.useState(false);
+	//const fnAbrirDialogoAcercaDe = React.useCallback(() => _setDialogoAcercaDeAbierto(true), [_setDialogoAcercaDeAbierto]);
+	//const fnCerrarDialogoAcercaDe = React.useCallback(() => _setDialogoAcercaDeAbierto(false), [_setDialogoAcercaDeAbierto]);
 
 	return (
 		<AppBar position="fixed" >
@@ -42,14 +45,21 @@ const BarraSuperior = ({ onMenuLateralClick }) => {
 						<MenuIcon />
 					</IconButton>
 				)}
+
 				<Typography variant="h6" sx={{ flexGrow: 1, color: 'primary.contrastText' }}>
 					{tituloPantalla}
 				</Typography>
 
-				<DialogoAcercaDe
-					abierto={dialogoAcercaDeAbierto}
-					fnCerrarDialogoApi={fnCerrarDialogoAcercaDe}
-					fnAbrirDialogoApi={fnAbrirDialogoAcercaDe} />
+
+
+				<IconButton color="inherit">
+					<Badge badgeContent={2} color="secondary">
+						<NotificationsIcon />
+					</Badge>
+				</IconButton>
+
+
+
 
 				{usuario &&
 					<MenuUsuario
@@ -60,6 +70,12 @@ const BarraSuperior = ({ onMenuLateralClick }) => {
 					/>
 				}
 
+				{/*
+				<DialogoAcercaDe
+					abierto={dialogoAcercaDeAbierto}
+					fnCerrarDialogoApi={fnCerrarDialogoAcercaDe}
+					fnAbrirDialogoApi={fnAbrirDialogoAcercaDe} />
+				*/}
 			</Toolbar>
 		</AppBar>
 	);
