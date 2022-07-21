@@ -1,5 +1,6 @@
 import PantallaAccesos from './accesos/PantallaAccesos';
 import PantallaAccesosPrueba from './accesos/PantallaAccesosPrueba';
+import PantallaAnticipos from './anticipos/PantallaAnticipos';
 import PantallaNomina from './nomina/PantallaNomina';
 import PantallaLogin from './PantallaLogin';
 import PantallaPrincipal from './PantallaPrincipal';
@@ -13,7 +14,9 @@ const Pantallas = {
 	Nomina: PantallaNomina,
 	Accesos: PantallaAccesos,
 	AccesosPrueba: PantallaAccesosPrueba,
-	Tickets: PantallaTickets
+	Tickets: PantallaTickets,
+	Anticipos: PantallaAnticipos
+
 }
 
 export default Pantallas;

@@ -12,7 +12,7 @@ export default function PantallaPrincipal() {
 	}, [navigate])
 
 	return (
-		<Box sx={{ width: '400px', m: 'auto', mt: 8 }}>
+		<Box sx={{ m: 'auto', mt: 8 }}>
 
 			<Typography variant="h5">Vales de empleado</Typography>
 			<Button sx={{ mt: 2 }} type="submit" fullWidth variant="contained" onClick={() => fnIrA('/vales/catalogo')}>

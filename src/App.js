@@ -49,6 +49,7 @@ function App() {
 								<Route path="/accesos" element={<Pantallas.Accesos />} />
 								<Route path="/accesos/prueba" element={<Pantallas.AccesosPrueba />} />
 								<Route path="/tickets" element={<Pantallas.Tickets />} />
+								<Route path="/anticipos" element={<Pantallas.Anticipos />} />
 								<Route path="/*" element={<Pantallas.Principal />} />
 							</Routes >
 

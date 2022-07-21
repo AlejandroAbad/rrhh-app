@@ -1,23 +1,70 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-import { Alert, AlertTitle, Box, CircularProgress, Paper, Stack, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Chip, CircularProgress, Paper, Stack, Typography } from "@mui/material";
 import SentimentNeutralIcon from '@mui/icons-material/SentimentNeutral';
 
 import { useDispatch, useSelector } from 'react-redux';
 
 import TICKET from 'api/tickets';
 import { consultarTickets } from 'redux/api/ticketsSlice';
+import { format, parse } from 'date-fns';
+import { es } from 'date-fns/locale';
+import DialogCrearTicket from './DialogCrearTicket';
 
+const getPrioridadDeEstadoTicket = (estado) => {
+	switch (estado) {
+		case 'Abierto': return 5;
+		case 'Pendiente usuario': return 1;
+		case 'En curso': return 4;
+		case 'Remitida a proveedor': return 6;
+		case 'Resuelto': return 10;
+		default: return 3;
+	}
+}
 
+const getEstiloDeEstadoTicket = (estado) => {
+	switch (estado) {
+		case 'Abierto': return ['info', estado, 'outlined'];
+		case 'Pendiente usuario': return ['warning', 'Requiere su atención', 'outlined'];
+		case 'En curso': return ['secondary', estado, 'outlined'];
+		case 'Remitida a proveedor': return ['secondary', 'En curso', 'outlined'];
+		case 'Resuelto': return ['default', estado, ''];
+		default: return ['info', estado, ''];
+	}
 
+}
+
+const ChipEstado = ({ estado }) => {
+	const [color, texto, variante] = getEstiloDeEstadoTicket(estado);
+	return <Chip
+		label={texto}
+		color={color}
+		variant={variante}
+		size="small"
+		sx={{ py: 1 }}
+	/>
+}
 
 const LineaTicket = (ticket) => {
-
-
-	return <Paper sx={{ p: 1, mb: 1 }} square >
-		{JSON.stringify(ticket)}
+	return <Paper sx={{ px: 4, py: 2, mb: 2 }} square >
+		<Typography variant="body2" sx={{ mb: 1 }} component="div">
+			<ChipEstado estado={ticket.estado} /> el {format(ticket.fechaModificacion, 'dd MMMM yyyy HH:mm', { locale: es })}
+		</Typography>
+		<a href={ticket.enlace} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
+			<Typography variant="h6" component="div" sx={{ color: 'secondary.main' }}>
+				{ticket.titulo}
+			</Typography>
+		</a>
+		<Box>
+			<Typography variant="body2" component="div">
+				{ticket.id} - {ticket.email}
+			</Typography>
+		</Box>
 	</Paper>
 }
+
+
+
 
 
 export default function PantallaTickets() {
@@ -29,7 +76,7 @@ export default function PantallaTickets() {
 	const tickets = useSelector(state => state.tickets.consulta.tickets);
 	const error = useSelector(state => state.tickets.consulta.error);
 
-	useEffect(() => {
+	React.useEffect(() => {
 		if (estadoConsultaTickets === 'inicial') {
 			dispatch(consultarTickets({ emails: ['alejandro.abad@hefame.es'] }))
 		}
@@ -40,6 +87,35 @@ export default function PantallaTickets() {
 	const theme = useTheme();
 	const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 	*/
+
+
+	const ticketsFiltradosYOrdenados = React.useMemo(() => {
+
+		let fechaReferencia = new Date();
+		if (!tickets) return [];
+		let mapeo = tickets.map(t => {
+			return {
+				...t,
+				fechaModificacion: parse(t.fechaModificacion, 'dd/MM/yyyy HH:mm:SS', fechaReferencia),
+				fechaCreacion: parse(t.fechaCreacion, 'dd/MM/yyyy HH:mm:SS', fechaReferencia)
+			}
+		})
+
+		let filtrados = mapeo.filter(t => true);
+
+		filtrados.sort((a, b) => {
+			let prioA = getPrioridadDeEstadoTicket(a.estado);
+			let prioB = getPrioridadDeEstadoTicket(b.estado);
+			if (prioA === prioB) {
+				return b.fechaModificacion - a.fechaModificacion;
+			} else {
+				return prioA - prioB;
+			}
+		})
+
+		return filtrados;
+
+	}, [tickets])
 
 
 	let contenido = null;
@@ -56,7 +132,7 @@ export default function PantallaTickets() {
 		</Alert>
 	} else if (tickets?.length > 0) {
 		contenido = <Stack sx={{ mt: 2 }}>
-			{tickets.map(ticket => {
+			{ticketsFiltradosYOrdenados.map(ticket => {
 				return <LineaTicket key={ticket.id} {...ticket} />
 			})}
 		</Stack>
@@ -70,34 +146,19 @@ export default function PantallaTickets() {
 	return <>
 		<Box sx={{ m: 'auto' }}>
 			<Typography variant="h4" sx={{ m: 'auto', mb: 2 }}>Peticiones de Soporte Informático</Typography>
+			<Typography>Este es el listado de sus tickets de soporte informático.</Typography>
+			<Alert severity='warning' sx={{ mt: 2 }}>
+				<AlertTitle>Página de ejemplo</AlertTitle>
+				Esta página muestra un ejemplo de cómo quedaría este servicio.
+				Por motivos técnicos, el ejemplo siempre muestra tickets creados por <em>alejandro.abad@hefame.es</em>.
+			</Alert>
+		</Box>
+
+		<Box sx={{ display: 'flex', justifyContent: { xs: 'center', md: 'flex-end' }, my: 2 }}>
+			<DialogCrearTicket />
 		</Box>
 
 		{contenido}
-
-		{/*
-		<Dialog fullScreen={fullScreen} fullWidth maxWidth="lg" open={Boolean(visualizarAlbaran)} onClose={() => setVisualizarAlbaran(false)}		>
-			<DialogTitle sx={{ m: 0, mb: 0, py: 1, bgcolor: 'primary.main', color: 'primary.contrastText' }} >
-				Vale de empleado: Albarán {visualizarAlbaran?.numeroAlbaran}
-				<IconButton
-					onClick={() => setVisualizarAlbaran(null)}
-					sx={{ position: 'absolute', right: 8, top: 4, color: (t) => t.palette.grey[800] }}
-				>
-					<CloseIcon />
-				</IconButton>
-			</DialogTitle>
-			<DialogContent sx={{ p: 0 }}>
-				<iframe
-					height="760px"
-					width="100%"
-					title={`Vale de empleado: Albarán ${visualizarAlbaran?.numeroAlbaran}`}
-					src={"data:application/pdf;base64," + visualizarAlbaran?.pdf}
-					type="application/pdf"
-					style={{ border: 'none' }}
-				/>
-			</DialogContent>
-		</Dialog>
-*/}
-
 
 	</>
 

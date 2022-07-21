@@ -14,7 +14,7 @@ import ticketsReducer from './api/ticketsSlice';
 const loadState = () => {
 //	localStorage.removeItem('state');
 	try {
-		const estadoSerializado = localStorage.getItem('state');
+		const estadoSerializado = localStorage.getItem('estadoAppEmp');
 		if (estadoSerializado === null) return undefined;
 		return JSON.parse(estadoSerializado);
 	} catch (e) {
@@ -26,7 +26,7 @@ const loadState = () => {
 const saveState = (state) => {
 	try {
 		const estadoSerializado = JSON.stringify(state);
-		localStorage.setItem('state', estadoSerializado);
+		localStorage.setItem('estadoAppEmp', estadoSerializado);
 	} catch (e) {
 		console.log(e);
 	}
