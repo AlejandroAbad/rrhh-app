@@ -20,7 +20,7 @@ const DrawerLateral = ({ abierto, fnCerrar, fnAbrir }) => {
 
 	let usuario = useSelector(state => state.api.usuario.datos);
 
-	return <SwipeableDrawer anchor="left" open={abierto} onClose={fnCerrar} onOpen={fnAbrir}	>
+	return <SwipeableDrawer anchor="left" open={abierto} onClose={fnCerrar} onOpen={fnAbrir} disableSwipeToOpen={usuario.jwt ? null : true}	>
 		<Box sx={{ bgcolor: 'barraSuperior.main', minWidth: '400px' }}>
 			<IconButton  onClick={fnCerrar} sx={{float: 'left', my: 1.6, ml: 1, mr: 2 }}>
 				<ChevronLeftIcon sx={{ fontSize: '38px', color: "barraSuperior.contrastText" }} />

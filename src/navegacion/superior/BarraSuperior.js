@@ -37,7 +37,7 @@ const BarraSuperior = ({ onMenuLateralClick }) => {
 	return (
 		<AppBar position="fixed" >
 			<Toolbar>
-				{usuario && (
+				{usuario?.jwt && (
 					<IconButton edge="start" sx={{ mr: 4 }} color="inherit" onClick={onMenuLateralClick}>
 						<MenuIcon />
 					</IconButton>
