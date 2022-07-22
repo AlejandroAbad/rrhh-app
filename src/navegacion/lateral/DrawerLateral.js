@@ -54,8 +54,8 @@ const DrawerLateral = ({ abierto, fnCerrar, fnAbrir }) => {
 					backgroundPosition: 'center 0',
 					backgroundSize: friki ? '170px 180px' : '130px 150px',
 				}}
-					onClick={() => [92409705].includes(usuario.codigo) && setFriki(f => !f)}
-					className={[92409705].includes(usuario.codigo) && "gira"}
+					onClick={() => [92409705, 90202335].includes(usuario.codigo) && setFriki(f => !f)}
+					className={[92409705, 90202335].includes(usuario.codigo) && "gira"}
 				/>
 				<Box sx={{ my: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 					<Typography variant="h5" component="div" sx={{ color: "primary.contrastText", textTransform: 'capitalize', fontWeight: 'bold' }}>{usuario.nombre}</Typography>

@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import pantallaReducer from './pantallaSlice';
 import apiReducer from './api/apiSlice';
+import anticiposReducer from './api/anticiposSlice';
 import catalogoReducer from './api/catalogoSlice';
 import carritoReducer from './api/carritoSlice';
 import valesReducer from './api/valesSlice';
@@ -42,7 +43,8 @@ export const store = configureStore({
 		nominaPdf: nominaPdfReducer,
 		pantalla: pantallaReducer,
 		accesos: accesosReducer,
-		tickets: ticketsReducer
+		tickets: ticketsReducer,
+		anticipos: anticiposReducer,
 	},
 	preloadedState: loadState()
 });

@@ -8,9 +8,6 @@ export const consultaAccesos = async (redux, abortController, fecha) => {
 	console.log(fecha)
 
 	let fechaFormateada = format(fecha, 'yyyyMMdd', { locale: es });
-
-	console.log(fechaFormateada)
-
 	let url = `/api/zhr_datos_accesos/${fechaFormateada}`;
 
 	let respuesta = await llamadaSap(redux, abortController, 'get', url);
