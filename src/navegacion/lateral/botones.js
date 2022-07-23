@@ -10,6 +10,7 @@ import PercentIcon from '@mui/icons-material/Percent';
 import SavingsIcon from '@mui/icons-material/Savings';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import BuildCircleOutlinedIcon from '@mui/icons-material/BuildCircleOutlined';
 
 const botones = [
 
@@ -35,6 +36,7 @@ const botones = [
 
 	{ texto: "Empresa", esTitulo: true },
 	{ texto: "Soporte CPD", icono: SupportAgentIcon, link: '/tickets' },
+	{ texto: "Gestiones", icono: BuildCircleOutlinedIcon, link: '/gestiones' },
 
 
 ]

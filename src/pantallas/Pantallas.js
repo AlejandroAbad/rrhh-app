@@ -1,6 +1,7 @@
 import PantallaAccesos from './accesos/PantallaAccesos';
 import PantallaAccesosPrueba from './accesos/PantallaAccesosPrueba';
 import PantallaAnticipos from './anticipos/PantallaAnticipos';
+import PantallaGestiones from './gestiones/PantallaGestiones';
 import PantallaNomina from './nomina/PantallaNomina';
 import PantallaLogin from './PantallaLogin';
 import PantallaPrincipal from './PantallaPrincipal';
@@ -15,7 +16,8 @@ const Pantallas = {
 	Accesos: PantallaAccesos,
 	AccesosPrueba: PantallaAccesosPrueba,
 	Tickets: PantallaTickets,
-	Anticipos: PantallaAnticipos
+	Anticipos: PantallaAnticipos,
+	Gestiones: PantallaGestiones
 
 }
 
