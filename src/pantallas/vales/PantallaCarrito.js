@@ -115,7 +115,7 @@ export default function PantallaCarrito() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const fnIrCatalogo = React.useCallback(() => {
-		navigate('/vales/catalogo', { replace: true })
+		navigate('/vales/catalogo')
 	}, [navigate]);
 
 	const contenidoCarrito = useSelector(state => state.carrito.materiales);

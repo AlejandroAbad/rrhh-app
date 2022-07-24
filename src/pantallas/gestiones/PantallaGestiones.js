@@ -32,7 +32,7 @@ const PantallaIndiceGestiones = () => {
 
 	const navigate = useNavigate();
 	const fnIrA = React.useCallback(destino => {
-		navigate(destino, { replace: false });
+		navigate(destino);
 	}, [navigate])
 
 	return <>

@@ -8,7 +8,7 @@ export default function PantallaPrincipal() {
 
 	const navigate = useNavigate();
 	const fnIrA = React.useCallback(destino => {
-		navigate(destino, { replace: true });
+		navigate(destino);
 	}, [navigate])
 
 	return (

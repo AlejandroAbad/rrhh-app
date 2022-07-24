@@ -78,7 +78,7 @@ const DialogoDetalleArticulo = () => {
 		dispatch(setMaterialSeleccionado(null))
 	}, [dispatch])
 	const fnVerCarrito = React.useCallback(() => {
-		navigate('/vales/carrito', { replace: true });
+		navigate('/vales/carrito');
 		fnDeseleccionarMaterial();
 	}, [navigate, fnDeseleccionarMaterial]);
 	const fnAnadirCarrito = React.useCallback(() => {
@@ -275,7 +275,7 @@ export default function PantallaCatalogo() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	let fnVerCarrito = React.useCallback(() => navigate('/vales/carrito', { replace: true }), [navigate]);
+	let fnVerCarrito = React.useCallback(() => navigate('/vales/carrito'), [navigate]);
 	let refPatronBusqueda = React.useRef();
 	let fnEstablecerPatronBusqueda = React.useCallback(() => dispatch(setPatronBusqueda(refPatronBusqueda.current.value)), [dispatch]);
 	let fnActualizaCatalogo = React.useCallback(() => dispatch(actualizarCatalogo()), [dispatch]);
