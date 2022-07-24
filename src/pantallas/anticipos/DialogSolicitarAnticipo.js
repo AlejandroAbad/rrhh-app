@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment, Slider, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, Grid, IconButton, InputAdornment, Radio, RadioGroup, Slider, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import PaymentsIcon from '@mui/icons-material/Payments';
 
@@ -8,69 +8,53 @@ import { useTheme } from '@emotion/react';
 import { useSelector } from 'react-redux';
 
 
-const SliderAnticipo = ({ nombre, disponible }) => {
+const SliderAnticipo = ({ nombre, disponible, valorMinimo }) => {
 
-	const [value, setValue] = React.useState(disponible);
+	const [solicitado, _setSolicitado] = React.useState(disponible);
 
-	const handleSliderChange = (event, newValue) => {
-		if (newValue < 0) {
-			setValue(0);
-		} else if (newValue > disponible) {
-			setValue(disponible);
+	const setSolicitado = React.useCallback((valorNuevo, deInput) => {
+		if (valorNuevo === '') valorNuevo = 0;
+		valorNuevo = +valorNuevo;
+		if (valorNuevo < valorMinimo) {
+			if (valorNuevo === 0) _setSolicitado(0);
+			else if (!deInput) _setSolicitado(valorMinimo);
+			else _setSolicitado(valorNuevo);
 		}
-		else {
-			setValue(newValue);
-		}
-	};
+		else if (valorNuevo > disponible) _setSolicitado(disponible);
+		else _setSolicitado(valorNuevo);
+	}, [_setSolicitado, disponible, valorMinimo])
 
-	const handleInputChange = (event) => {
-		let newValue = (event.target.value === '' ? 0 : Number(event.target.value));
-		if (newValue < 0) {
-			setValue(0);
-		} else if (newValue > disponible) {
-			setValue(disponible);
-		}
-		else {
-			setValue(newValue);
-		}
-	};
+	const fnCambiaSlider = (_, valorNuevo) => setSolicitado(valorNuevo);
+	const fnCambiaInput = (event) => setSolicitado(event.target.value, true);
+	const fnBlurInput = () => setSolicitado(solicitado);
 
-	const handleBlur = () => {
-		if (value < 0) {
-			setValue(0);
-		} else if (value > disponible) {
-			setValue(disponible);
-		}
-	};
-
-
-
-	return <Box>
+	return <Box >
 		<Typography variant="h6" component="div">
 			{nombre}
 		</Typography>
 		<Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
 
 			<Slider
-				value={typeof value === 'number' ? value : 0}
+				value={solicitado}
 				min={0}
 				max={disponible}
-				onChange={handleSliderChange}
+				onChange={fnCambiaSlider}
 				sx={{ mr: 4 }}
 				disabled={!Boolean(disponible)}
 				color="secondary"
 				valueLabelDisplay="auto"
 				valueLabelFormat={x => `${x}€`}
-
+				marks={[{ value: valorMinimo }]}
 			/>
 
 			<TextField
 				color="secondary"
-				value={value}
-				onChange={handleInputChange}
-				onBlur={handleBlur}
+				value={solicitado}
+				onChange={fnCambiaInput}
+				onBlur={fnBlurInput}
 				type="number"
-				sx={{ width: {xs: '14ch', sm: '22ch'}, ml: { md: 2 } }}
+				size="small"
+				sx={{ width: { xs: '14ch', sm: '26ch' }, ml: { md: 2 } }}
 				disabled={!Boolean(disponible)}
 				InputProps={{
 					endAdornment: <InputAdornment position="end">€</InputAdornment>,
@@ -82,6 +66,145 @@ const SliderAnticipo = ({ nombre, disponible }) => {
 		</Box>
 	</Box >
 }
+
+
+const SliderPrestamo = ({ nombre, disponible, maxCuotas, minCuotas, valorMinimo }) => {
+
+	const [solicitado, _setSolicitado] = React.useState(disponible);
+	const [cuotas, _setCuotas] = React.useState(maxCuotas);
+
+	const setSolicitado = React.useCallback((valorNuevo, deInput) => {
+		if (valorNuevo === '') valorNuevo = 0;
+		valorNuevo = +valorNuevo;
+		if (valorNuevo < valorMinimo) {
+			if (valorNuevo === 0) _setSolicitado(0);
+			else if (!deInput) _setSolicitado(valorMinimo);
+			else _setSolicitado(valorNuevo);
+		}
+		else if (valorNuevo > disponible) _setSolicitado(disponible);
+		else _setSolicitado(valorNuevo);
+	}, [_setSolicitado, disponible, valorMinimo])
+
+	const setCuotas = React.useCallback((valorNuevo) => {
+		if (valorNuevo === '') valorNuevo = 0;
+		if (valorNuevo < minCuotas) _setCuotas(minCuotas);
+		else if (valorNuevo > maxCuotas) _setCuotas(maxCuotas);
+		else _setCuotas(valorNuevo);
+	}, [_setCuotas, maxCuotas, minCuotas])
+
+	const fnCambiaSlider = (_, valorNuevo) => setSolicitado(valorNuevo);
+	const fnCambiaInput = (event) => setSolicitado(event.target.value, true);
+	const fnBlurInput = () => setSolicitado(solicitado);
+
+	const fnCambiaSliderCuotas = (_, valorNuevo) => setCuotas(valorNuevo);
+	const fnCambiaInputCuotas = (event) => setCuotas(event.target.value);
+
+	const fnCambiaSliderCuotaMes = (_, valorNuevo) => setSolicitado(valorNuevo * cuotas);
+	const fnCambiaInputCuotaMes = (event) => setSolicitado(event.target.value * cuotas, true);
+
+	return <Box >
+		<Typography variant="h6" component="div">
+			{nombre}
+		</Typography>
+
+		<Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
+			<Slider
+				value={cuotas}
+				min={minCuotas}
+				max={maxCuotas}
+				onChange={fnCambiaSliderCuotas}
+				sx={{ mr: 4 }}
+				disabled={!Boolean(disponible)}
+				color="secondary"
+				valueLabelDisplay="auto"
+				valueLabelFormat={x => `${x} meses`}
+			/>
+			<TextField
+				color="secondary"
+				value={cuotas}
+				onChange={fnCambiaInputCuotas}
+				type="number"
+				size="small"
+				sx={{ width: { xs: '14ch', sm: '26ch' }, ml: { md: 2 } }}
+				disabled={!Boolean(disponible)}
+				InputProps={{
+					endAdornment: <InputAdornment position="end">meses</InputAdornment>,
+					step: 1,
+					min: minCuotas,
+					max: maxCuotas,
+				}}
+			/>
+		</Box>
+
+		<Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
+
+			<Slider
+				value={solicitado}
+				min={0}
+				max={disponible}
+				onChange={fnCambiaSlider}
+				sx={{ mr: 4 }}
+				disabled={!Boolean(disponible)}
+				color="secondary"
+				valueLabelDisplay="auto"
+				valueLabelFormat={x => `${x}€`}
+				marks={[{ value: valorMinimo }]}
+			/>
+			<TextField
+				color="secondary"
+				value={solicitado}
+				onChange={fnCambiaInput}
+				onBlur={fnBlurInput}
+				type="number"
+				size="small"
+				sx={{ width: { xs: '14ch', sm: '26ch' }, ml: { md: 2 } }}
+				disabled={!Boolean(disponible)}
+				InputProps={{
+					endAdornment: <InputAdornment position="end">€</InputAdornment>,
+					step: 1,
+					min: 0,
+					max: disponible + 1,
+				}}
+			/>
+		</Box>
+
+		<Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
+
+			<Slider
+				value={solicitado / cuotas}
+				min={0}
+				max={disponible / cuotas}
+				onChange={fnCambiaSliderCuotaMes}
+				sx={{ mr: 4 }}
+				disabled={!Boolean(disponible)}
+				color="secondary"
+				valueLabelDisplay="auto"
+				valueLabelFormat={x => `${x.toFixed(2)} €/mes`}
+				marks={[{ value: valorMinimo / cuotas }]}
+			/>
+
+			<TextField
+				color="secondary"
+				value={(solicitado / cuotas).toFixed(2)}
+				onChange={fnCambiaInputCuotaMes}
+				onBlur={fnBlurInput}
+				type="number"
+				size="small"
+				sx={{ width: { xs: '20ch', sm: '26ch' }, ml: { md: 2 } }}
+				disabled={!Boolean(disponible)}
+				InputProps={{
+					endAdornment: <InputAdornment position="end">€/mes</InputAdornment>,
+					step: 1,
+					min: 0,
+					max: disponible / cuotas,
+				}}
+			/>
+		</Box>
+
+	</Box >
+}
+
+
 
 
 export default function DialogSolicitarAnticipo() {
@@ -107,10 +230,29 @@ export default function DialogSolicitarAnticipo() {
 				</IconButton>
 			</DialogTitle>
 			<DialogContent sx={{ px: 4, mt: 2 }}>
-				<Stack direction="column" spacing={4}>
-					{resultado.anticipos.map(anticipo => <SliderAnticipo key={anticipo.nombre} {...anticipo} />)}
-					{resultado.prestamos.map(prestamo => <SliderAnticipo key={prestamo.nombre} {...prestamo} />)}
-				</Stack>
+				<Grid container>
+					<Grid item xs={12} md={8}>
+						<Stack sx={{ px: { md: 6 }, py: { md: 4 } }}>
+							{resultado.anticipos.map(anticipo => <SliderAnticipo key={anticipo.nombre} {...anticipo} valorMinimo={75} />)}
+						</Stack>
+						<Stack sx={{ px: { md: 6 }, py: 4 }}>
+							{resultado.prestamos.map(prestamo => <SliderPrestamo key={prestamo.nombre} {...prestamo} valorMinimo={75} maxCuotas={36} minCuotas={6} />)}
+						</Stack>
+					</Grid>
+					<Grid item xs={12} md={4}>
+						<FormControl >
+							<FormLabel color="secondary">A ingresar por</FormLabel>
+							<RadioGroup defaultValue="CN" >
+								<FormControlLabel value="CN" control={<Radio color="secondary" />} label="Cuenta nómina" />
+								<FormControlLabel value="FC" control={<Radio color="secondary" />} label="Farmacuenta" />
+							</RadioGroup>
+						</FormControl>
+					</Grid>
+				</Grid>
+
+
+
+
 			</DialogContent>
 			<DialogActions sx={{ px: 4, mb: 2 }}>
 				<Button onClick={() => setAbierto(false)} color="info" startIcon={<CloseIcon />}>Descartar</Button>
