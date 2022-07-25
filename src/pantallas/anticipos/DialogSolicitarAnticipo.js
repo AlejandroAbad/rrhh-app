@@ -33,42 +33,46 @@ const SliderAnticipo = ({ nombre, disponible, valorMinimo, innerRef, onChange })
 	const fnBlurInput = () => setSolicitado(solicitado);
 
 	return <Box >
-		<Typography variant="h6" component="div">
+		<Typography variant="h6" component="div" sx={{ color: disponible >= valorMinimo ? '' : t => t.palette.grey[700] }}>
 			{nombre}
 		</Typography>
-		<Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
+		{disponible >= valorMinimo ?
+			<Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
 
-			<Slider
-				value={solicitado}
-				min={0}
-				max={disponible}
-				onChange={fnCambiaSlider}
-				sx={{ mr: 4 }}
-				disabled={!Boolean(disponible)}
-				color="secondary"
-				valueLabelDisplay="auto"
-				valueLabelFormat={x => `${x}€`}
-				marks={[{ value: valorMinimo }]}
-			/>
-			<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-				<TextField
-					color="secondary"
+				<Slider
 					value={solicitado}
-					onChange={fnCambiaInput}
-					onBlur={fnBlurInput}
-					type="number"
-					size="small"
-					sx={{ width: { xs: '20ch', sm: '18ch' }, ml: { md: 2 } }}
+					min={0}
+					max={disponible}
+					onChange={fnCambiaSlider}
+					sx={{ mr: 4 }}
 					disabled={!Boolean(disponible)}
-					InputProps={{
-						endAdornment: <InputAdornment position="end">€</InputAdornment>,
-						step: 1,
-						min: 0,
-						max: disponible + 1,
-					}}
+					color="secondary"
+					valueLabelDisplay="auto"
+					valueLabelFormat={x => `${x}€`}
+					marks={[{ value: valorMinimo }]}
 				/>
+				<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+					<TextField
+						color="secondary"
+						value={solicitado}
+						onChange={fnCambiaInput}
+						onBlur={fnBlurInput}
+						type="number"
+						size="small"
+						sx={{ width: { xs: '20ch', sm: '18ch' }, ml: { md: 2 } }}
+						disabled={!Boolean(disponible)}
+						InputProps={{
+							endAdornment: <InputAdornment position="end">€</InputAdornment>,
+							step: 1,
+							min: 0,
+							max: disponible + 1,
+						}}
+					/>
+				</Box>
 			</Box>
-		</Box>
+			:
+			<Typography variant="body1" sx={{ mb: 2, color: t => t.palette.grey[600] }}>No es posibile solicitar el anticipo sobre la {nombre.toLowerCase()}.</Typography>
+		}
 	</Box >
 }
 
@@ -112,88 +116,93 @@ const SliderPrestamo = ({ nombre, disponible, maxCuotas, minCuotas, valorMinimo,
 	const fnCambiaInputCuotaMes = (event) => setSolicitado(event.target.value * cuotas, true);
 
 	return <Box >
-		<Typography variant="h6" component="div">
+		<Typography variant="h6" component="div" sx={{ color: disponible >= valorMinimo ? '' : t => t.palette.grey[700] }}>
 			{nombre}
 		</Typography>
 
-		<Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
-			<Slider
-				value={cuotas}
-				min={minCuotas}
-				max={maxCuotas}
-				onChange={fnCambiaSliderCuotas}
-				sx={{ mr: 4 }}
-				disabled={!Boolean(disponible)}
-				color="secondary"
-				valueLabelDisplay="auto"
-				valueLabelFormat={x => `${x} meses`}
-			/>
-			<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-				<TextField
-					color="secondary"
+		{disponible >= valorMinimo ? <>
+			<Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
+				<Slider
 					value={cuotas}
-					onChange={fnCambiaInputCuotas}
-					type="number"
-					size="small"
-					sx={{ width: { xs: '20ch', sm: '18ch' }, ml: { md: 2 } }}
+					min={minCuotas}
+					max={maxCuotas}
+					onChange={fnCambiaSliderCuotas}
+					sx={{ mr: 4 }}
 					disabled={!Boolean(disponible)}
-					InputProps={{
-						endAdornment: <InputAdornment position="end">meses</InputAdornment>,
-						step: 1,
-						min: minCuotas,
-						max: maxCuotas,
-					}}
+					color="secondary"
+					valueLabelDisplay="auto"
+					valueLabelFormat={x => `${x} meses`}
 				/>
+				<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+					<TextField
+						color="secondary"
+						value={cuotas}
+						onChange={fnCambiaInputCuotas}
+						type="number"
+						size="small"
+						sx={{ width: { xs: '20ch', sm: '18ch' }, ml: { md: 2 } }}
+						disabled={!Boolean(disponible)}
+						InputProps={{
+							endAdornment: <InputAdornment position="end">meses</InputAdornment>,
+							step: 1,
+							min: minCuotas,
+							max: maxCuotas,
+						}}
+					/>
+				</Box>
 			</Box>
-		</Box>
 
-		<Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
-			<Slider value={solicitado}
-				min={0}
-				max={disponible}
-				onChange={fnCambiaSlider}
-				sx={{ mr: 4 }}
-				disabled={!Boolean(disponible)}
-				color="secondary"
-				valueLabelDisplay="auto"
-				valueLabelFormat={x => `${x}€`}
-				marks={[{ value: valorMinimo }]}
-			/>
-			<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-				<TextField
-					color="secondary"
-					value={solicitado}
-					onChange={fnCambiaInput}
-					onBlur={fnBlurInput}
-					type="number"
-					size="small"
-					sx={{ width: { xs: '20ch', sm: '18ch' }, ml: { md: 2 } }}
+			<Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' } }}>
+				<Slider value={solicitado}
+					min={0}
+					max={disponible}
+					onChange={fnCambiaSlider}
+					sx={{ mr: 4 }}
 					disabled={!Boolean(disponible)}
-					InputProps={{
-						endAdornment: <InputAdornment position="end">€</InputAdornment>,
-						step: 1,
-						min: 0,
-						max: disponible + 1,
-					}}
-				/>
-				<TextField
 					color="secondary"
-					value={(solicitado / cuotas).toFixed(2)}
-					onChange={fnCambiaInputCuotaMes}
-					onBlur={fnBlurInput}
-					type="number"
-					size="small"
-					sx={{ width: { xs: '20ch', sm: '18ch' }, ml: { md: 2 } }}
-					disabled={!Boolean(disponible)}
-					InputProps={{
-						endAdornment: <InputAdornment position="end">€/mes</InputAdornment>,
-						step: 1,
-						min: 0,
-						max: disponible / cuotas,
-					}}
+					valueLabelDisplay="auto"
+					valueLabelFormat={x => `${x}€`}
+					marks={[{ value: valorMinimo }]}
 				/>
+				<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+					<TextField
+						color="secondary"
+						value={solicitado}
+						onChange={fnCambiaInput}
+						onBlur={fnBlurInput}
+						type="number"
+						size="small"
+						sx={{ width: { xs: '20ch', sm: '18ch' }, ml: { md: 2 } }}
+						disabled={!Boolean(disponible)}
+						InputProps={{
+							endAdornment: <InputAdornment position="end">€</InputAdornment>,
+							step: 1,
+							min: 0,
+							max: disponible + 1,
+						}}
+					/>
+					<TextField
+						color="secondary"
+						value={(solicitado / cuotas).toFixed(2)}
+						onChange={fnCambiaInputCuotaMes}
+						onBlur={fnBlurInput}
+						type="number"
+						size="small"
+						sx={{ width: { xs: '20ch', sm: '18ch' }, ml: { md: 2 } }}
+						disabled={!Boolean(disponible)}
+						InputProps={{
+							endAdornment: <InputAdornment position="end">€/mes</InputAdornment>,
+							step: 1,
+							min: 0,
+							max: disponible / cuotas,
+						}}
+					/>
+				</Box>
 			</Box>
-		</Box>
+		</>
+			:
+			<Typography variant="body1" sx={{ color: t => t.palette.grey[600] }}>No es posibile solicitar el {nombre.toLowerCase()}.</Typography>
+		}
 	</Box >
 }
 

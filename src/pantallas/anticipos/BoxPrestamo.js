@@ -1,3 +1,4 @@
+import { Masonry } from "@mui/lab";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { format, parse } from "date-fns";
 import { es } from "date-fns/locale";
@@ -46,84 +47,84 @@ export default function BoxPrestamo({ nombre, disponible, pendienteAprobar, conc
 				</Box>
 			</Grid>
 			<Grid item xs={12} sm={6} md={8} lg={9}>
-				{hayDatos ? <>
-					{disponible > 0 && <>
+				{hayDatos ? <Masonry columns={{xs: 1, md: 3}}>
+					{disponible > 0 && <Box>
 						<Typography variant="body1" sx={{ pt: 1, px: 2 }} component="div">
 							Disponible
 						</Typography>
 						<Typography variant="body1" sx={{ pb: 1, px: 2, fontWeight: 'bold' }} component="div">
 							{disponible.toFixed(2)}€
 						</Typography>
-					</>
+					</Box>
 					}
-					{pendienteAprobar > 0 && <>
+					{pendienteAprobar > 0 && <Box>
 						<Typography variant="body1" sx={{ pt: 1, px: 2 }} component="div">
 							Pendiente de aprobación
 						</Typography>
 						<Typography variant="body1" sx={{ pb: 1, px: 2, fontWeight: 'bold' }} component="div">
 							{pendienteAprobar.toFixed(2)}€
 						</Typography>
-					</>
+					</Box>
 					}
-					{concedido > 0 && <>
+					{concedido > 0 && <Box>
 						<Typography variant="body1" sx={{ pt: 1, px: 2 }} component="div">
 							Concedido
 						</Typography>
 						<Typography variant="body1" sx={{ pb: 1, px: 2, fontWeight: 'bold' }} component="div">
 							{concedido.toFixed(2)}€
 						</Typography>
-					</>
+					</Box>
 					}
-					{concedido - pendientePagar > 0 && <>
+					{concedido - pendientePagar > 0 && <Box>
 						<Typography variant="body1" sx={{ pt: 1, px: 2 }} component="div">
 							Amortizado
 						</Typography>
 						<Typography variant="body1" sx={{ pb: 1, px: 2, fontWeight: 'bold' }} component="div">
 							{(concedido - pendientePagar).toFixed(2)}€
 						</Typography>
-					</>
+					</Box>
 					}
 
-					{pendientePagar > 0 && <>
+					{pendientePagar > 0 && <Box>
 						<Typography variant="body1" sx={{ pt: 1, px: 2 }} component="div">
 							Pendiente
 						</Typography>
 						<Typography variant="body1" sx={{ pb: 1, px: 2, fontWeight: 'bold' }} component="div">
 							{pendientePagar.toFixed(2)}€
 						</Typography>
-					</>
+					</Box>
 					}
-
-					{cuota > 0 && <>
+					
+					{cuota > 0 && <Box>
 						<Typography variant="body1" sx={{ pt: 1, px: 2 }} component="div">
 							Cuota mensual
 						</Typography>
 						<Typography variant="body1" sx={{ pb: 1, px: 2, fontWeight: 'bold' }} component="div">
 							{cuota.toFixed(2)}€
 						</Typography>
-					</>
+					</Box>
 					}
 
-					{fechaInicio && <>
+					{fechaInicio && <Box>
 						<Typography variant="body1" sx={{ pt: 1, px: 2 }} component="div">
 							Inicio
 						</Typography>
 						<Typography variant="body1" sx={{ pb: 1, px: 2, fontWeight: 'bold' }} component="div">
 							{format(parse(fechaInicio, 'yyyyMMdd', new Date()), 'dd MMMM yyyy', { locale: es })}
 						</Typography>
-					</>
+					</Box>
 					}
-					{fechaFin && <>
+					{fechaFin && <Box>
 						<Typography variant="body1" sx={{ pt: 1, px: 2 }} component="div">
 							Fin
 						</Typography>
 						<Typography variant="body1" sx={{ pb: 1, px: 2, fontWeight: 'bold' }} component="div">
 							{format(parse(fechaFin, 'yyyyMMdd', new Date()), 'dd MMMM yyyy', { locale: es })}
 						</Typography>
-					</>
+					</Box>
 					}
 
-				</>
+				</Masonry>
 					:
 					<Typography variant="body1" sx={{ mt: 4, px: 2, pb: 4, textAlign: 'center' }} component="div">
 						No tiene solicitado este anticipo y actualmente no es posible solicitarlo.
