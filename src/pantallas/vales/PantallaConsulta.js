@@ -212,7 +212,7 @@ export default function PantallaConsulta() {
 
 		<Dialog fullScreen={fullScreen} fullWidth maxWidth="lg" open={Boolean(visualizarAlbaran)} onClose={() => setVisualizarAlbaran(false)}		>
 			<DialogTitle sx={{ m: 0, mb: 0, py: 1, bgcolor: 'primary.main', color: 'primary.contrastText' }} >
-				Vale de empleado: Albarán {visualizarAlbaran?.numeroAlbaran}
+				Vale de emplead@: Albarán {visualizarAlbaran?.numeroAlbaran}
 				<IconButton
 					onClick={() => setVisualizarAlbaran(null)}
 					sx={{ position: 'absolute', right: 8, top: 4, color: (t) => t.palette.grey[800] }}
@@ -224,7 +224,7 @@ export default function PantallaConsulta() {
 				<iframe
 					height="760px"
 					width="100%"
-					title={`Vale de empleado: Albarán ${visualizarAlbaran?.numeroAlbaran}`}
+					title={`Vale de emplead@: Albarán ${visualizarAlbaran?.numeroAlbaran}`}
 					src={"data:application/pdf;base64," + visualizarAlbaran?.pdf}
 					type="application/pdf"
 					style={{ border: 'none' }}

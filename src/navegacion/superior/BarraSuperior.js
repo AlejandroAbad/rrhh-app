@@ -51,17 +51,18 @@ const BarraSuperior = ({ onMenuLateralClick }) => {
 				</Typography>
 
 
+				{usuario?.jwt &&
+					<IconButton color="inherit">
+						<Badge badgeContent={2} color="secondary">
+							<NotificationsIcon />
+						</Badge>
+					</IconButton>
+				}
 
-				<IconButton color="inherit">
-					<Badge badgeContent={2} color="secondary">
-						<NotificationsIcon />
-					</Badge>
-				</IconButton>
 
 
 
-
-				{usuario &&
+				{usuario?.jwt &&
 					<MenuUsuario
 						elementoAncla={anclaje}
 						abierto={Boolean(anclaje)}

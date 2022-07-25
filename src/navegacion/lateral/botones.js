@@ -20,7 +20,7 @@ const botones = [
 	{ texto: "Mis nóminas", icono: PaymentsIcon, link: '/nomina' },
 	{ texto: "Anticipos", icono: SavingsIcon, link: '/anticipos' },
 	{
-		texto: "Vales de empleado", icono: ShoppingBagIcon, subMenu: [
+		texto: "Vales de emplead@", icono: ShoppingBagIcon, subMenu: [
 			{ texto: "Crear vale", icono: AddShoppingCartIcon, link: '/vales/catalogo' },
 			{ texto: "Consultar", icono: ReceiptLongIcon, link: '/vales/consulta' },
 		]
