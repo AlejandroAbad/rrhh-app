@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 export const pantallaSlice = createSlice({
 	name: 'api',
 	initialState: {
-		titulo: 'App del empleado'
+		titulo: 'Utilidades del emplead@'
 	},
 	reducers: {
 		setTituloPantalla: (state, action) => {

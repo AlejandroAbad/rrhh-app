@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, Grid, IconButton, InputAdornment, Paper, Radio, RadioGroup, Slider, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Grid, IconButton, InputAdornment, Paper, Radio, RadioGroup, Slider, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import PaymentsIcon from '@mui/icons-material/Payments';
 
@@ -251,7 +251,7 @@ export default function DialogSolicitarAnticipo() {
 			totalPrestamos: refPrestamos.current,
 			metodoIngreso
 		})
-	}, [totalAnticipos, totalPrestamos, metodoIngreso])
+	}, [refAnticipos, refPrestamos, metodoIngreso])
 
 	return <>
 		<Button variant="contained" onClick={() => setAbierto(true)} startIcon={<PaymentsIcon />} sx={{ m: 1 }}>
@@ -313,7 +313,7 @@ export default function DialogSolicitarAnticipo() {
 									</Box>
 								}
 								{
-									totalPrestamos.map(prestamo => prestamo.solicitado > 0 ? <Box >
+									totalPrestamos.map(prestamo => prestamo.solicitado > 0 ? <Box key={prestamo.nombre} >
 										<Typography component="div" variant="body1" color="secondary">{prestamo.nombre}</Typography>
 										<Typography component="div" sx={{ mt: 1, ml: 4, fontWeight: 'bold', fontSize: '115%' }}>{prestamo.solicitado.toFixed(2)}€</Typography>
 										<Typography component="div" sx={{ ml: 4 }} variant="body2">A devolver en {prestamo.cuotas} cuotas de {(prestamo.solicitado / prestamo.cuotas).toFixed(2)}€</Typography>

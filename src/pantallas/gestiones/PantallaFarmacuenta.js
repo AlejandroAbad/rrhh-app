@@ -6,19 +6,8 @@ export default function PantallaFarmacuenta() {
 		<Box sx={{ m: 'auto' }}>
 			<Typography variant="h4" sx={{ m: 'auto', mb: 2 }}>Farmacuenta</Typography>
 		</Box>
-		<pre>
+		<Typography>
 			Accede a tus cuentas a través de la web www.hefame.es. Recuerda introducir login y password específica de Farmacuenta.
-
-
-			Usuario
-			92409705
-
-			Clave
-			••••••••
-
-
-
-
 
 			Si no dispones de acceso o no recuerdas tu contraseña, consulta este manual sobre cómo solicitarla. Aquí también encontrarás cómo solicitar tu Tarjeta personal de Coordenadas para realizar transferencias.
 			Farmacuenta tiene un funcionamiento similar a una cuenta corriente bancaria. Todos los empleados/as pueden utilizarla obteniendo ventajosas condiciones, como la realización de operaciones financieras inmediatas de:
@@ -182,6 +171,6 @@ export default function PantallaFarmacuenta() {
 
 
 
-		</pre>
+		</Typography>
 	</>
 }
